@@ -2,20 +2,25 @@ import urllib.request
 import os
 import json
 
+
 def url_open(url):
     req = urllib.request.Request(url)
-    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36')
+    req.add_header(
+        'User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36')
     response = urllib.request.urlopen(req)
     html = response.read()
     # buff = BytesIO(html)
     # f = gzip.GzipFile(fileobj=buff)
     return html
 
+
 def api_get(url):
     req = urllib.request.Request(url)
-    req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36')
+    req.add_header(
+        'User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36')
     response = urllib.request.urlopen(req)
-    return  json.loads(response.read())
+    return json.loads(response.read())
+
 
 def get_today_list(apis):
     for i in apis['result']:
@@ -49,11 +54,15 @@ def get_today_list(apis):
 #     return bangumi
 
 # we use api to get bangumi list now
+
+
 def get_bangumi(bangumi_list):
     bangumi = []
     for i in bangumi_list:
-        bangumi.append({'name': i['title'],'play_url':i['url'], 'episode':i['pub_index'] ,'img':i['square_cover']})
+        bangumi.append({'name': i['title'], 'play_url': i['url'],
+                        'episode': i['pub_index'], 'img': i['square_cover']})
     return bangumi
+
 
 def img_save(bangumi, path):
     os.chdir(path)
@@ -68,13 +77,15 @@ def img_save(bangumi, path):
             f.write(img)
         img = url_open(img_url)
         # plt.savefig(img_path)
-        i['img'] = img_path
+        i['img'] = '../upload/bangumi_img/' + img_path
 
 
 if __name__ == '__main__':
     target_url = 'https://bangumi.bilibili.com/web_api/timeline_global'
-    img_folder = r'D:\程序编写\Python\web python\upload\bangumi_img'
+    # !You should modify this when the working directory changed
+    img_folder = os.path.abspath('./upload/bangumi_img')
     apis = api_get(target_url)
     bangumi_list = get_today_list(apis)
     bangumi = get_bangumi(bangumi_list)
-    img_save(bangumi,img_folder)
+    img_save(bangumi, img_folder)
+    print(bangumi)
