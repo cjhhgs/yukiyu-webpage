@@ -14,7 +14,24 @@
     <!-- index样式文件 -->
     <link rel="stylesheet" href="css/index.css">
 </head>
+
 <body>
+
+    <!-- front page start -->
+    <div class="left-band">
+        <div class="left-text">
+            <h2>Yukiyu</h2>
+            <p class="info">综合资讯门户网站</p>
+            <a href="javascript:;" class="btn">注册账号</a>
+            <a href="javascript:;" class="btn">登陆</a>
+        </div>
+        <span class="chevron-left"></span>
+    </div>
+    <div class="search">
+        <input type="text" value="输入关键词">
+        <button></button>
+    </div>
+    <!-- front page end -->
     <!-- header start -->
     <header class="page-head">
         <ul id="header_list">
@@ -26,6 +43,7 @@
     </header>
     <!-- header end -->
     <!-- TODO: width adjustment -->
+    <!-- bangumi start -->
     <div id="bangumi" class="w box_style">
         <header class="storey-title">
             <h2>番剧</h2>
@@ -131,5 +149,15 @@
             </ul>
         </div>
     </div>
+    <!-- bangumi end -->
+
+    <!-- javascript -->
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- 官网提供的 axios 在线地址 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 自己的js -->
+    <script src="./js/index.js"></script>
 </body>
+
 </html>

@@ -1,13 +1,97 @@
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/icomoon.eot?yx2gmz');
+    src:  url('../fonts/icomoon.eot?yx2gmz#iefix') format('embedded-opentype'),
+      url('../fonts/icomoon.ttf?yx2gmz') format('truetype'),
+      url('../fonts/icomoon.woff?yx2gmz') format('woff'),
+      url('../fonts/icomoon.svg?yx2gmz#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
 body {
-    /* width: 1200px;
-    height: 1000px; */
+
     background-size:cover;
     background: linear-gradient(to right,rgba(247, 246, 244, 0.5),rgba(247, 246, 244,.5)),
     url("../images/background/1597244020382_big.png") no-repeat top;
     /* background: url("../images/background/1597244020382_big.png");
     background-color:rgba(0, 0, 0, 0.4); */
 }
+.left-band {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right,rgba(0,0,0,.5),rgba(0,0,0,.5));
+}
+.left-band .left-text {
+    position: absolute;
+    left: 25%;
+    top: 38%;
+    color: #fff;
+}
+.left-text h2 {
+    font-size: 45px;
+}
+.left-text .info {
+    margin-top: 20px;
+    font-size: 28px;
+}
+.left-text .btn {
+    display: inline-block;
+    margin-right: 20px;
+    margin-top: 40px;
+    width: 150px;
+    height: 55px;
+    line-height: 52px;
+    border: 2px solid #fff;
+    border-radius: 30px;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    transition: all .3s;
+}
+.left-text .btn:hover {
+    color: black;
+    background-color: #fff;
+}
+.left-band .chevron-left {
+    font-family: 'icomoon';
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    font-size: 28px;
+    color: #fff;
+    cursor: pointer;
+}
+.search {
+    position: absolute;
+    top: 45%;
+    right: 10%;
+    overflow: hidden;
+}
+.search input {
+    float: left;
+    width: 420px;
+    height: 40px;
+    border: 1px solid #00a4ff;
+    border-right: 0;
+    color: #bfbfbf;
+    font-size: 14px;
+    padding-left: 15px;
+}
+.search button {
+    font-family: 'icomoon';
+    float: left;
+    width: 50px;
+    height: 40px;
+    background-color: #00a4ff;
+    color: #fff;
+    border: 0;
+}
 .page-head {
+    display: none;
     height: 65px;
 }
 #header_list li {
@@ -15,12 +99,13 @@ body {
     padding: 0 40px;
     line-height: 65px;
     font-size: 16px;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 #header_list li a {
     color: #fff;
 }
 #bangumi {
+    display: none;
     margin-top: 100px;
     overflow: hidden;
     /* height: 800px; */
