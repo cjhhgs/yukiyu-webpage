@@ -5,7 +5,6 @@ var mainPage = document.querySelector('#main-page');
 
 chevronLeft.addEventListener('click', function () {
     animate(leftBand, -leftBand.offsetWidth);
-    // console.log(search.offsetLeft, search.parentNode.offsetWidth);
     animate(search, search.parentNode.offsetWidth, showMain);
 })
 
