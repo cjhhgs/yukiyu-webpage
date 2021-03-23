@@ -92,6 +92,7 @@ body {
 }
 #main-page {
     display: none;
+    opacity: 0;
 }
 .page-head {
     /* display: none; */
