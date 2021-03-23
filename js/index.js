@@ -1,12 +1,17 @@
 var leftBand = document.querySelector('.left-band');
 var search = document.querySelector('.search');
 var chevronLeft = document.querySelector('.left-band').querySelector('.chevron-left');
+var mainPage = document.querySelector('#main-page');
 
 chevronLeft.addEventListener('click', function () {
     animate(leftBand, -leftBand.offsetWidth);
-    console.log(search.offsetLeft, search.offsetWidth);
-    animate(search, search.offsetRight+search.offsetLeft+search.offsetWidth);
+    // console.log(search.offsetLeft, search.parentNode.offsetWidth);
+    animate(search, search.parentNode.offsetWidth, showMain);
 })
+
+function showMain(){
+    mainPage.style.display = 'block';
+}
 
 function animate(obj, target, callback) {
     clearInterval(obj.timer);
