@@ -5,11 +5,43 @@ var mainPage = document.querySelector('#main-page');
 
 chevronLeft.addEventListener('click', showMain)
 
-document.addEventListener('DOMMouseScroll', showMain, false);
+// document.addEventListener('DOMMouseScroll', showMain, false);
+// document.addEventListener('onmousewheel', showMain, false);
+var scrollFunc = function (e) {
+    var direct = 0;
+    e = e || window.event;
+    if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件             
+        if (e.wheelDelta > 0) { //当滑轮向上滚动时
+            mouseUpScroll();
+        }
+        if (e.wheelDelta < 0) { //当滑轮向下滚动时
+            mouseDownScroll();
+        }
+    } else if (e.detail) {  //Firefox滑轮事件
+        if (e.detail < 0) { //当滑轮向上滚动时
+            mouseUpScroll();
+        }
+        if (e.detail > 0) { //当滑轮向下滚动时
+            mouseDownScroll();
+        }
+    }
+    // ScrollText(direct);
+}
+//给页面绑定滑轮滚动事件
+document.addEventListener('DOMMouseScroll', scrollFunc, false);
+//滚动滑轮触发scrollFunc方法
+window.onmousewheel = document.onmousewheel = scrollFunc;  
+
+var mouseUpScroll = function(){
+    
+}
+var mouseDownScroll = function(){
+    showMain();
+}
 
 function showMain() {
     animate(leftBand, -leftBand.offsetWidth);
-    animate(search, search.parentNode.offsetWidth, fadeIn(mainPage, 20));
+    animate(search, search.parentNode.offsetWidth, fadeIn(mainPage, 15));
 }
 
 function fadeIn(element, speed) {

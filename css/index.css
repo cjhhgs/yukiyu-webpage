@@ -12,10 +12,7 @@
 body {
     overflow: hidden;
     background-size:cover;
-    background: linear-gradient(to right,rgba(247, 246, 244, 0.5),rgba(247, 246, 244,.5));
-    /* url("../images/background/1597244020382_big.png") no-repeat top; */
-    /* background: url("../images/background/1597244020382_big.png");
-    background-color:rgba(0, 0, 0, 0.4); */
+    background: url("../images/background/1597244020382_big.png") no-repeat top;
 }
 .left-band {
     position: absolute;
@@ -92,7 +89,10 @@ body {
 }
 #main-page {
     display: none;
+    height: 100vh;
     opacity: 0;
+    background-size:cover;
+    background: linear-gradient(to right,rgba(247, 246, 244, 0.5),rgba(247, 246, 244,.5));
 }
 .page-head {
     /* display: none; */
