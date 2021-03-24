@@ -16,7 +16,7 @@ def hello_world():
 def get_bangumi_info():
     target_url = 'https://bangumi.bilibili.com/web_api/timeline_global'
     # !You should modify this when the working directory changed
-    img_folder = os.path.abspath('./upload/bangumi_img')
+    img_folder = os.path.abspath('../upload/bangumi_img')
     apis = bilibili.api_get(target_url)
     bangumi_list = bilibili.get_today_list(apis)
     bangumi = bilibili.get_bangumi(bangumi_list)
