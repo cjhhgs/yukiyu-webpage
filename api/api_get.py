@@ -16,3 +16,11 @@ def hello_world():
 def get_bangumi_info():
     bangumi = bilibili.get_all()
     return bangumi
+
+
+if __name__ == '__main__':
+    app.run(
+      host='0.0.0.0',
+      port= 80,
+      debug=True
+    )
