@@ -28,34 +28,8 @@ def get_today_list(apis):
         if(i['is_today']):
             return i['seasons']
 
-# this is for html sorce code
-# def get_bangumi(html):
-#     bangumi = []
-#     cur_group_start = html.find('season-group is-published today')
-#     cur_group_end = html.find('season-group is-published today', cur_group_start)
-#     while cur_group_end != -1:
-#         # get detail info of each bangumi
-#         start = html.find('season-item',cur_group_start,cur_group_end)
-#         end = html.find('season-item',start,cur_group_end)
-#         while start != -1:
-#             play_url_start=('//www.bilibili.com/bangumi/play/', start, end)
-#             play_url_end=('"',play_url_start,end)
-#             play_url = html[play_url_start:play_url_end]
-#             name_start=html.find('title=',play_url_end,end) + 7
-#             name_end=html.find('"',name_start,end)
-#             bangumi_name=html[name_start,name_end]
-#             episode_start = html.find('season-desc published',name_end,end) + 24
-#             episode_end = html.find('</div>',episode_start,end)
-#             episode = html[episode_start:episode_end]
-#             # store the info of one bangumi
-#             bangumi.append([bangumi_name,play_url,episode])
-#             start = html.find('season-item',end,cur_group_end)
-#             end = html.find('season-item',start,cur_group_end)
-#     return bangumi
 
 # we use api to get bangumi list now
-
-
 def get_bangumi(bangumi_list):
     bangumi = []
     for i in bangumi_list:
