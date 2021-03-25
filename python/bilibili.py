@@ -83,7 +83,7 @@ def img_save(bangumi, path):
 if __name__ == '__main__':
     target_url = 'https://bangumi.bilibili.com/web_api/timeline_global'
     # !You should modify this when the working directory changed
-    img_folder = os.path.abspath('./upload/bangumi_img')
+    img_folder = os.path.abspath('../upload/bangumi_img')
     apis = api_get(target_url)
     bangumi_list = get_today_list(apis)
     bangumi = get_bangumi(bangumi_list)
