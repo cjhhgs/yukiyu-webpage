@@ -5,8 +5,7 @@ var mainPage = document.querySelector('#main-page');
 
 chevronLeft.addEventListener('click', showMain)
 
-// document.addEventListener('DOMMouseScroll', showMain, false);
-// document.addEventListener('onmousewheel', showMain, false);
+
 var scrollFunc = function (e) {
     var direct = 0;
     e = e || window.event;
@@ -37,6 +36,8 @@ var mouseUpScroll = function(){
 }
 var mouseDownScroll = function(){
     showMain();
+    document.removeEventListener('DOMMouseScroll', scrollFunc);
+    window.onmousewheel = document.onmousewheel = null;  
 }
 
 function showMain() {
