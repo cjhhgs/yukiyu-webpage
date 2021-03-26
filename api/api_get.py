@@ -4,7 +4,7 @@ import json
 import os
 import sys
  
-import bilibili
+import merge_info
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ def hello_world():
 
 @app.route('/bangumi')
 def get_bangumi_info():
-    bangumi = bilibili.get_all()
+    bangumi = merge_info.merge_info()
     return bangumi
 
 

@@ -45,7 +45,7 @@ def img_save(bangumi, path):
         img_url = i['img']
         img_name = i['name']
         # img_path = path+'/'+img_name+'.'+img_url.split('.')[-1]
-        img_path = img_name.split('/')[0]+'.'+img_url.split('.')[-1]
+        img_path = img_name.replace('/', '-')+'.'+img_url.split('.')[-1]
         with open(img_path, 'wb') as f:
             print(img_url)
             img = url_open(img_url)
@@ -53,7 +53,7 @@ def img_save(bangumi, path):
         # img = url_open(img_url)
         # plt.savefig(img_path)
         # i['img'] = '../upload/bangumi_img/' + img_path
-    
+
     os.chdir(rec_path)
 
 
@@ -65,10 +65,9 @@ def get_all():
     bangumi_list = get_today_list(apis)
     bangumi = get_bangumi(bangumi_list)
     img_save(bangumi, img_folder)
-    bangumi_data = {"season":bangumi}
 
-   
-    return bangumi_data
+    return bangumi
+
 
 if __name__ == '__main__':
     target_url = 'https://bangumi.bilibili.com/web_api/timeline_global'
