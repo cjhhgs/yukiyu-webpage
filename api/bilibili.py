@@ -34,11 +34,11 @@ def get_bangumi(bangumi_list, need_img):
     bangumi = []
     if need_img == True:
         for i in bangumi_list:
-            bangumi.append({'name': i['title'], 'play_url': i['url'],
+            bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
                             'episode': i['pub_index'], 'img': i['square_cover']})
     else:
         for i in bangumi_list:
-            bangumi.append({'name': i['title'], 'play_url': i['url'],
+            bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
                             'episode': i['pub_index'], 'img': ""})
     return bangumi
 

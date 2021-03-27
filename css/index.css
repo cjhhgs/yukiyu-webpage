@@ -63,6 +63,10 @@ body {
     color: #fff;
     cursor: pointer;
 }
+.chevron-right {
+    font-family: 'icomoon';
+    cursor: pointer;
+}
 .search {
     position: absolute;
     top: 45%;
@@ -170,7 +174,7 @@ body {
     font-size: 16px;
     cursor: pointer;
 }
-.list-on {
+.list_on {
     color: #fff;
     /* box-shadow: 0 -6px 15px rgb(36 37 38 / 10%); */
     border-radius: 15px 15px 0 0;
@@ -186,7 +190,7 @@ body {
     overflow: auto;
 }
 
-.list-box ul li {
+.list-box>ul>li {
     display: block;
     float: left;
     margin-left: 20px;
@@ -198,7 +202,7 @@ body {
     border-radius: 15px;
     transition: all .3s;
 }
-.list-box ul li:hover{
+.list-box>ul>li:hover{
     box-shadow: 9px 9px 9px rgb(36 37 38 / 10%);
 }
 .list-box .pic {
@@ -225,8 +229,30 @@ body {
     float: left;
 }
 .text-bottom span{
+    position: relative;
     float: left;
     margin-left: 62px;
     vertical-align: middle;
     cursor: pointer;
+}
+.text-bottom .chevron-right ul{
+    position: absolute;
+    padding: 5px 0;
+    width: 50px;
+    bottom: 0;
+    right: -50px;
+    background-color: #fefefe;
+    box-shadow: 0 3px 10px rgba(0,0,0,.1);
+    border-radius: 4px;
+}
+.text-bottom .chevron-right ul li{
+    float: left;
+    margin: 0 15%;
+    width: 70%;
+    padding: 5px;
+    transition: all, .3s;
+}
+.text-bottom .chevron-right ul li:hover a{
+    color: #79bce4;
+    border-radius: 2px;
 }
