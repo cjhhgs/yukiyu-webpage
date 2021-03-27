@@ -11,8 +11,8 @@
   }
 body {
     overflow: hidden;
-    background-size:cover;
-    background: url("../images/background/1597244020382_big.png") no-repeat top;
+    background: url("../images/background/1597244020382.png") no-repeat top;
+    background-size:100% auto;
     background-attachment: fixed;
 }
 .left-band {

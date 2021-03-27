@@ -21,7 +21,7 @@ var bangumiList = new Vue({
         showMark:-1,
         // bangumiGet:axios.get("http://106.15.77.207/bangumi")
         bangumiGet:[{'name':'五等分的新娘', 'play_url': {'bili': 'https://www.bilibili.com/bangumi/play/ss36166/?spm_id_from=333.851.b_62696c695f7265706f72745f616e696d65.34', '樱花':'#'},
-        'episode': '第12话', 'img': 'https://i0.hdslb.com/bfs/bangumi/image/dda6999ee8867f8496f914461f4d175a664429fe.png@70w_70h_1c_100q.webp'}]
+        'episode': '第12话', 'img': './upload/五等分.webp'}]
     },
     methods: {
         getPlayUrl: function (index) {
