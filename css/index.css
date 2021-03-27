@@ -13,6 +13,7 @@ body {
     overflow: hidden;
     background-size:cover;
     background: url("../images/background/1597244020382_big.png") no-repeat top;
+    background-attachment: fixed;
 }
 .left-band {
     position: absolute;
@@ -89,7 +90,6 @@ body {
 }
 #main-page {
     display: none;
-    height: 100vh;
     opacity: 0;
     background-size:cover;
     background: linear-gradient(to right,rgba(247, 246, 244, 0.5),rgba(247, 246, 244,.5));
@@ -108,27 +108,60 @@ body {
 #header_list li a {
     color: #fff;
 }
+.aside-nav {
+    position: fixed;
+    top: 30%;
+    left: 90%;
+    padding: 20px 0px;
+    width: 90px;
+    background-color: #79bce4;
+}
+.aside-nav ul {
+    margin: auto;
+    width: 70%;
+    text-align: center;
+}
+.aside-nav ul li{
+    float: left;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: all .3s;
+}
+.aside-nav ul li:hover,
+.aside-nav ul .aside-li-on{
+    color: #79bce4;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 6px 6px 7px rgb(36 37 38 / 10%);
+}
 #bangumi {
     /* display: none; */
     margin-top: 100px;
     overflow: hidden;
-    /* height: 800px; */
+    height: 2000px;
     background-color: #fff;
 }
 .storey-title {
     margin: 20px;
     margin-bottom: 11px;
     height: 40px;
+    color: #7abde5;
     /* border: 1px solid red; */
 }
 .storey-title h2 {
     float: left;
-    font-size: 20px;
+    margin-left: 35px;
+    line-height: 45px;
+    font-size: 26px;
 }
 .storey-title ul {
-    float: left;
-    margin-left: 20px;
-    line-height: 50px;
+    float: right;
+    margin-right: 35px;
+    line-height: 51px;
     cursor: default;
 }
 .storey-title ul li {
@@ -138,29 +171,35 @@ body {
     cursor: pointer;
 }
 .list-on {
-    color: #00a1d6;
-    box-shadow: 0 -6px 15px rgb(36 37 38 / 10%);
-    border-radius: 10px 10px 0 0;
+    color: #fff;
+    /* box-shadow: 0 -6px 15px rgb(36 37 38 / 10%); */
+    border-radius: 15px 15px 0 0;
+    background-color: #79bce4;
 }
 .list-box {
-    height: 400px;
     margin: 40px;
     margin-top: 0;
     padding: 20px;
-    border-top: 1px solid #00a1d6;
-    border-radius: 0 0 10px 10px;
+    /* border-top: 1px solid #00a1d6; */
+    background-color: #79bce4;
+    border-radius: 10px;
     overflow: auto;
 }
-.list-box ul {
-    margin-left: 40px;
-}
+
 .list-box ul li {
     display: block;
     float: left;
-    margin-right: 20px;
+    margin-left: 20px;
     margin-bottom: 20px;
-    width: 220px;
-    height: 70px;
+    padding: 20px;
+    width: 260px;
+    /* height: 70px; */
+    background-color: #fff;
+    border-radius: 15px;
+    transition: all .3s;
+}
+.list-box ul li:hover{
+    box-shadow: 9px 9px 9px rgb(36 37 38 / 10%);
 }
 .list-box .pic {
     float: left;
@@ -171,12 +210,16 @@ body {
     float: left;
     margin-left: 10px;
 }
+.text-bottom .episode {
+    color: #999;
+}
 .text .bangumi-title{
     display: block;
     width: 140px;
     height: 37px;
     margin-top: 2px;
     margin-bottom: 12px;
+    color: #27719d;
 }
 .text-bottom a{
     float: left;

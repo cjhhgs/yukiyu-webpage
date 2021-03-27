@@ -3,10 +3,11 @@ var search = document.querySelector('.search');
 var chevronLeft = document.querySelector('.left-band').querySelector('.chevron-left');
 var mainPage = document.querySelector('#main-page');
 
-chevronLeft.addEventListener('click', showMain)
+chevronLeft.addEventListener('click', showMain);
 
 
 var scrollFunc = function (e) {
+    e.stopPropagation();
     var direct = 0;
     e = e || window.event;
     if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件             
@@ -29,20 +30,23 @@ var scrollFunc = function (e) {
 //给页面绑定滑轮滚动事件
 document.addEventListener('DOMMouseScroll', scrollFunc, false);
 //滚动滑轮触发scrollFunc方法
-window.onmousewheel = document.onmousewheel = scrollFunc;  
+window.onmousewheel = document.onmousewheel = scrollFunc;
 
-var mouseUpScroll = function(){
-    
+var mouseUpScroll = function () {
+
 }
-var mouseDownScroll = function(){
+var mouseDownScroll = function () {
     showMain();
-    document.removeEventListener('DOMMouseScroll', scrollFunc);
-    window.onmousewheel = document.onmousewheel = null;  
 }
 
 function showMain() {
-    animate(leftBand, -leftBand.offsetWidth);
-    animate(search, search.parentNode.offsetWidth, fadeIn(mainPage, 15));
+    document.removeEventListener('DOMMouseScroll', scrollFunc);
+    window.onmousewheel = document.onmousewheel = null;
+    // 让欢迎页完全消失后再允许页面滚动，避免滚动事件使得主页面也进行了滚动
+    animate(leftBand, -leftBand.offsetWidth,
+        function () { document.body.style.overflow = 'auto'; },
+        true);
+    animate(search, search.parentNode.offsetWidth, fadeIn(mainPage, 15), true);
 }
 
 function fadeIn(element, speed) {
@@ -56,7 +60,7 @@ function fadeIn(element, speed) {
     }, speed);
 }
 
-function animate(obj, target, callback) {
+function animate(obj, target, callback, hide) {
     clearInterval(obj.timer);
     obj.timer = setInterval(function () {
         // var step = Math.ceil((target - obj.offsetLeft) / 10);
@@ -67,7 +71,30 @@ function animate(obj, target, callback) {
             if (callback) {
                 callback();
             }
+            if (hide) {
+                obj.style.display = 'none';
+            }
         }
         obj.style.left = obj.offsetLeft + step + 'px';
     }, 15);
 }
+
+// dynamically ajust the width of the page
+var w = document.querySelectorAll('.w')
+var aside = document.querySelector('.aside-nav')
+function witdthAjust () {
+    var width = document.body.offsetWidth;
+    var ajustWidth;
+    if (width > 1850) {
+        ajustWidth = 1280;
+    }
+    else {
+        ajustWidth = 1020;
+    }
+    aside.style.left = width * 0.52+ ajustWidth / 2  + 'px';
+    for (var i = 0; i < w.length; i++){
+        w[i].style.width = ajustWidth + 'px';
+    }
+}
+witdthAjust();
+window.addEventListener("resize", witdthAjust);
