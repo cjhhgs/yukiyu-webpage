@@ -30,11 +30,16 @@ def get_today_list(apis):
 
 
 # we use api to get bangumi list now
-def get_bangumi(bangumi_list):
+def get_bangumi(bangumi_list, need_img):
     bangumi = []
-    for i in bangumi_list:
-        bangumi.append({'name': i['title'], 'play_url': i['url'],
-                        'episode': i['pub_index'], 'img': i['square_cover']})
+    if need_img == True:
+        for i in bangumi_list:
+            bangumi.append({'name': i['title'], 'play_url': i['url'],
+                            'episode': i['pub_index'], 'img': i['square_cover']})
+    else:
+        for i in bangumi_list:
+            bangumi.append({'name': i['title'], 'play_url': i['url'],
+                            'episode': i['pub_index'], 'img': ""})
     return bangumi
 
 
@@ -57,14 +62,15 @@ def img_save(bangumi, path):
     os.chdir(rec_path)
 
 
-def get_all():
+def get_all(need_img = False):
     target_url = 'https://bangumi.bilibili.com/web_api/timeline_global'
     # !You should modify this when the working directory changed
     img_folder = os.path.abspath('../upload/bangumi_img')
     apis = api_get(target_url)
     bangumi_list = get_today_list(apis)
-    bangumi = get_bangumi(bangumi_list)
-    img_save(bangumi, img_folder)
+    bangumi = get_bangumi(bangumi_list, need_img)
+    if need_img == True:
+        img_save(bangumi, img_folder)
 
     return bangumi
 
