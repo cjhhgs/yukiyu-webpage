@@ -57,7 +57,7 @@ def img_save(bangumi, path):
             f.write(img)
         # img = url_open(img_url)
         # plt.savefig(img_path)
-        # i['img'] = '../upload/bangumi_img/' + img_path
+        i['img'] = '../upload/bangumi_img/' + img_path
 
     os.chdir(rec_path)
 
