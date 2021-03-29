@@ -4,7 +4,8 @@ import json
 import os
 import sys
  
-import bilibili
+import merge_info
+import get_last_week
 
 app = Flask(__name__)
 
@@ -14,13 +15,18 @@ def hello_world():
 
 @app.route('/bangumi')
 def get_bangumi_info():
-    bangumi = bilibili.get_all()
+    bangumi = merge_info.merge_info()
     return bangumi
+
+@app.route('/lastweek')
+def get_last_week_info():
+    last_week = get_last_week()
+    return last_week
 
 
 if __name__ == '__main__':
     app.run(
-      host='0.0.0.0',
+      #host='0.0.0.0',
       port= 80,
       debug=True
     )

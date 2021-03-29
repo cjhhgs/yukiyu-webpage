@@ -38,28 +38,46 @@
         <header class="page-head">
             <ul id="header_list">
                 <li><a href="#">首页</a></li>
-                <li><a href="#">首页</a></li>
-                <li><a href="#">首页</a></li>
-                <li><a href="#">首页</a></li>
+                <li><a href="#">番剧</a></li>
             </ul>
         </header>
         <!-- header end -->
-        <!-- TODO: width adjustment -->
+        <aside class="aside-nav box_style">
+            <ul>
+                <li>首页</li>
+                <li class="aside-li-on">番剧</li>
+            </ul>
+        </aside>
         <!-- bangumi start -->
         <div id="bangumi" class="w box_style">
             <header class="storey-title">
                 <h2>番剧</h2>
-                <ul>
-                    <li class="list-on">最新</li>
-                    <li>周一</li>
-                    <li>周二</li>
-                    <li>周三</li>
-                    <li>周四</li>
-                    <li>周五</li>
-                </ul>
+                <div id="week-choose">
+                    <ul>
+                        <li v-for="(item, index) in weeks" :class="{list_on:index==mark}" @click="choose(index)">{{item}}</li>
+                    </ul>
+                </div>
             </header>
-            <div class="list-box box_style">
-                <ul>
+            <div class="list-box box_style clear-fix">
+                <ul id="bangumi-list">
+                    <li v-for="(item, index) in bangumiGet">
+                        <a :href="getPlayUrl(index)" class="pic"><img :src="item['img']" alt=""></a>
+                        <div class="text">
+                            <!-- TODO: overflow ... -->
+                            <a href="getPlayUrl(index)" class="bangumi-title">{{item['name']}}</a>
+                            <div class="text-bottom">
+                                <a href="getPlayUrl(index)" class="episode">{{item['episode']}}</a>
+                                <span class="chevron-right" @mouseenter="showUrlList(index)" @mouseleave="hideUrlList">
+                                    <ul v-show="index==showMark">
+                                        <li v-for="(i, name) in item['play_url']">
+                                            <a :href="i">{{name}}</a>
+                                        </li>
+                                    </ul>
+                                </span>
+                                
+                            </div>
+                        </div>
+                    </li>
                     <li>
                         <a href="#" class="pic"><img src="upload/p1.webp" alt=""></a>
                         <div class="text">
@@ -161,8 +179,12 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- 官网提供的 axios 在线地址 -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- 自己的js -->
+    <!-- js 动画 -->
     <script src="./js/index.js"></script>
+    <!-- axios 引入 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- js 动态元素 -->
+    <script src="./js/index_dynamic.js"></script>
 </body>
 
 </html>
