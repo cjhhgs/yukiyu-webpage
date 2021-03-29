@@ -25,8 +25,9 @@ def get_last_week():
     bangumi_list = list()
     for i in range(0,6):
         last_day = today + datetime.timedelta(days= -i)
+        date = last_day.strftime("%Y-%m-%d")
         list_of_day = get_list_of_date(last_day)
-        temp = {"date":last_day,"seasons":list_of_day}
+        temp = {"date":date,"seasons":list_of_day}
         bangumi_list.append(temp)
     result={"result":bangumi_list}
     print(result)
