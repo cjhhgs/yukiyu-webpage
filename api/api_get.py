@@ -20,7 +20,7 @@ def get_bangumi_info():
 
 @app.route('/lastweek')
 def get_last_week_info():
-    last_week = get_last_week()
+    last_week = get_last_week.get_last_week()
     return last_week
 
 
