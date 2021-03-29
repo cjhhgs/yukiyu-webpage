@@ -5,8 +5,12 @@ import difflib
 
 # TODO: packing follow code to a class
 
+# check whether a bangumi is in bangumi_list
+# if exist, return the id of it
+# if not, return 0
 def if_exist(db,name):
     cursor=db.cursor()
+    # select all and check one by one
     sql = "select * from bangumi_list"
     try:
         cursor.execute(sql)
@@ -15,6 +19,8 @@ def if_exist(db,name):
         for i in res:
             name = i[1].split('-')
             for item in name:
+                # we use the string diff to approximate matching
+                # optimize the matching rule here if needed
                 if difflib.SequenceMatcher(None, name, item).quick_ratio() > 0.75:
                     return i[0]
         return 0
@@ -22,6 +28,7 @@ def if_exist(db,name):
         print('not exist in bangumi_list')
         return 0
 
+# use time to create the id
 def create_id():
     ticks = int(time.time()*100)%10000000
     return ticks
@@ -29,8 +36,12 @@ def create_id():
 def insert_new(db, bangumi_dict):
     today = time.strftime("%Y-%m-%d", time.localtime())
     cursor=db.cursor()
-    for key in bangumi_dict.keys():       
+    # key is the website info we use reptile got
+    # for each website, we have diffrent table to store its info
+    for key in bangumi_dict.keys():   
+        # update each item in the web one by one    
         for item in bangumi_dict[key]:
+            # check whether a bangumi is in database
             sql = "select bangumi_id from %s\
                     where title = '%s'"% \
                     (key,item['name'])
@@ -40,6 +51,7 @@ def insert_new(db, bangumi_dict):
                 print('start to fetch')
                 result=cursor.fetchall()
                 print('fetch result:' ,result)
+                # if already exist, we just update the play_url and time
                 if len(result) != 0:
                     sql = "UPDATE %s SET\
                     play_url =  '%s',  episode = '%s', last_update = '%s'\
@@ -56,12 +68,17 @@ def insert_new(db, bangumi_dict):
                     except:
                         db.rollback()
                         print('update error!')
+                # if dosent exist we check whether it in 'bangumi_list' first
                 else:
                     print('try to find in bangumi_list')
                     id = if_exist(db,item['name'])
                     print('id==%d'%id)
+                    # if not in bangumi_list , this is a comletely new bangumi
+                    # we create a new id and insert it into the bangumi_list first
                     if id == 0:
                         id = create_id()
+                        # for completely new bangumi, we need to get its img first
+                        # TODO: optimize this to just get the pic of the target and ignore the rest
                         new_dict = merge_info.merge_info(True)
                         print('start insert to bangumi list!')
                         img_url=None
@@ -81,6 +98,7 @@ def insert_new(db, bangumi_dict):
                         except:
                             print('insert into bangumi_list error!')
                             db.rollback()
+                    # we insert this bangumi to current web's table
                     sql = "insert into %s\
                             (bangumi_id, title, play_url, episode, last_update)\
                             VALUES(%d, '%s', '%s','%s', '%s')"% \
