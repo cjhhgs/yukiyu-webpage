@@ -5,6 +5,7 @@ import os
 import sys
  
 import merge_info
+import get_last_week
 
 app = Flask(__name__)
 
@@ -17,10 +18,16 @@ def get_bangumi_info():
     bangumi = merge_info.merge_info()
     return bangumi
 
+@app.route('/lastweek')
+def get_last_week_info():
+    last_week = get_last_week.get_last_week()
+    return last_week
+
 
 if __name__ == '__main__':
     app.run(
       host='0.0.0.0',
-      port= 80,
+      port= 5000,
       debug=True
     )
+##
