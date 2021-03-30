@@ -18,12 +18,14 @@ def get_list_of_date(day):
     db.close()
 
     return data
+
+
     
 def get_last_week():
     today = datetime.date.today()
 
     bangumi_list = list()
-    for i in range(0,6):
+    for i in range(0,7):
         last_day = today + datetime.timedelta(days= -i)
         weekday = last_day.weekday()
         date = last_day.strftime("%Y-%m-%d")
