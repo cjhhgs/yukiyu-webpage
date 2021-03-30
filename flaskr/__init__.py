@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template
-import merge_info
+import get_last_week
 
 
 def create_app(test_config=None):
@@ -31,7 +31,7 @@ def create_app(test_config=None):
 
     @app.route('/bangumi')
     def get_bangumi_info():
-        bangumi = merge_info.merge_info()
+        bangumi = get_last_week.get_last_week()
         return bangumi
 
     return app
