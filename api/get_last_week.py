@@ -18,18 +18,22 @@ def get_list_of_date(day):
     db.close()
 
     return data
+
+
     
 def get_last_week():
     today = datetime.date.today()
 
     bangumi_list = list()
-    for i in range(0,6):
+    for i in range(0,7):
         last_day = today + datetime.timedelta(days= -i)
+        weekday = last_day.weekday()
         date = last_day.strftime("%Y-%m-%d")
         list_of_day = get_list_of_date(last_day)
-        temp = {"date":date,"seasons":list_of_day}
+        temp = {"date":date,"weekday":weekday,"seasons":list_of_day}
         bangumi_list.append(temp)
-    result={"result":bangumi_list}
+    new_list = sorted(bangumi_list, key=lambda keys: keys["weekday"])
+    result={"result":new_list}
     print(result)
     return result
 
