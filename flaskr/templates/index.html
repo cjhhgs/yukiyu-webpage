@@ -63,12 +63,12 @@
                 <ul v-for="(pack, weekDay) in bangumiGet" v-show="weekDay==weekMark">
                     
                     <li v-for="(item, index) in pack.seasons">
-                        <a :href="getPlayUrl(item, index)" class="pic"><img :src="item['img']" alt=""></a>
+                        <a :href="getPlayUrl(item, index)" class="pic" target="new"><img :src="item['img']" alt=""></a>
                         <div class="text">
                             <!-- TODO: overflow ... -->
-                            <a :href="getPlayUrl(item, index)" class="bangumi-title">{{item['name']}}</a>
+                            <a :href="getPlayUrl(item, index)" class="bangumi-title" target="new">{{item['name']}}</a>
                             <div class="text-bottom">
-                                <a :href="getPlayUrl(item, index)" class="episode">{{item['episode']}}</a>
+                                <a :href="getPlayUrl(item, index)" class="episode" target="new">{{item['episode']}}</a>
                                 <span class="chevron-right" @mouseenter="showUrlList(index)" @mouseleave="hideUrlList">
                                     <ul v-show="index==showMark">
                                         <!-- <li v-for="(i, name) in item['play_url']">
