@@ -1,6 +1,7 @@
 import urllib.request
 import os
 import json
+from PIL import Image
 
 
 def url_open(url):
@@ -55,6 +56,9 @@ def img_save(bangumi, path):
             print(img_url)
             img = url_open(img_url)
             f.write(img)
+            # img = Image.open(f)
+            # img = img.resize(70,70,Image.ANTIALIAS)
+            # f.write(img)
         # img = url_open(img_url)
         # plt.savefig(img_path)
         i['img'] = '../static/upload/bangumi_img/' + img_path
@@ -66,7 +70,7 @@ def get_all(need_img = False):
     target_url = 'https://bangumi.bilibili.com/web_api/timeline_global'
     # !You should modify this when the working directory changed
     # img_folder = os.path.abspath('../upload/bangumi_img')
-    img_folder = '/home/flask-yukiyu/flaskr/static/upload/'
+    img_folder = '/home/flask-yukiyu/flaskr/static/upload/bangumi_img/'
     apis = api_get(target_url)
     bangumi_list = get_today_list(apis)
     bangumi = get_bangumi(bangumi_list, need_img)
@@ -80,9 +84,9 @@ if __name__ == '__main__':
     target_url = 'https://bangumi.bilibili.com/web_api/timeline_global'
     # !You should modify this when the working directory changed
     # img_folder = os.path.abspath('../upload/bangumi_img')
-    img_folder = '/home/flask-yukiyu/flaskr/static/upload/'
+    img_folder = '/home/flask-yukiyu/flaskr/static/upload/bangumi_img/'
     apis = api_get(target_url)
     bangumi_list = get_today_list(apis)
-    bangumi = get_bangumi(bangumi_list)
+    bangumi = get_bangumi(bangumi_list, True)
     img_save(bangumi, img_folder)
     print(bangumi)

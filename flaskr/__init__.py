@@ -34,10 +34,10 @@ def create_app(test_config=None):
         bangumi = get_last_week.get_last_week()
         return bangumi
 
-    @app.route('/lastweek')
-    def get_last_week_info():
-        last_week = get_last_week.get_last_week()
-        return last_week
+    # @app.route('/lastweek')
+    # def get_last_week_info():
+    #     last_week = get_last_week.get_last_week()
+    #     return last_week
 
     return app
 

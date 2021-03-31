@@ -55,25 +55,25 @@
                 <h2>番剧</h2>
                 <div id="week-choose">
                     <ul>
-                        <li v-for="(item, index) in weeks" :class="{list_on:index==mark}" @click="choose(index)">{{item}}</li>
+                        <li v-for="(item, index) in weeks" :class="{list_on:index==weekMark}" @click="changeWeekMark(index)">{{item}}</li>
                     </ul>
                 </div>
             </header>
-            <div class="list-box box_style clear-fix">
-                <ul id="bangumi-list">
+            <div id="bangumi-list" class="list-box box_style clear-fix">
+                <ul v-for="(pack, weekDay) in bangumiGet" v-show="weekDay==weekMark">
                     
-                    <li v-for="(item, index) in bangumiGet">
-                        <a :href="getPlayUrl(index)" class="pic"><img :src="item['img']" alt=""></a>
+                    <li v-for="(item, index) in pack.seasons">
+                        <a :href="getPlayUrl(item, index)" class="pic"><img :src="item['img']" alt=""></a>
                         <div class="text">
                             <!-- TODO: overflow ... -->
-                            <a href="getPlayUrl(index)" class="bangumi-title">{{item['name']}}</a>
+                            <a :href="getPlayUrl(item, index)" class="bangumi-title">{{item['name']}}</a>
                             <div class="text-bottom">
-                                <a href="getPlayUrl(index)" class="episode">{{item['episode']}}</a>
+                                <a :href="getPlayUrl(item, index)" class="episode">{{item['episode']}}</a>
                                 <span class="chevron-right" @mouseenter="showUrlList(index)" @mouseleave="hideUrlList">
                                     <ul v-show="index==showMark">
-                                        <li v-for="(i, name) in item['play_url']">
+                                        <!-- <li v-for="(i, name) in item['play_url']">
                                             <a :href="i">{{name}}</a>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </span>
                                 
