@@ -2,6 +2,7 @@ import urllib.request
 import os
 import json
 from PIL import Image
+import io
 
 
 def url_open(url):
@@ -52,15 +53,12 @@ def img_save(bangumi, path):
         img_name = i['name']
         # img_path = path+'/'+img_name+'.'+img_url.split('.')[-1]
         img_path = img_name.replace('/', '-')+'.'+img_url.split('.')[-1]
-        with open(img_path, 'wb') as f:
-            print(img_url)
-            img = url_open(img_url)
-            f.write(img)
-            # img = Image.open(f)
-            # img = img.resize(70,70,Image.ANTIALIAS)
-            # f.write(img)
-        # img = url_open(img_url)
-        # plt.savefig(img_path)
+        print(img_url)
+        img = url_open(img_url)
+        img = io.BytesIO(img)
+        pil_img = Image.open(img)
+        img = pil_img.resize((70,70),Image.ANTIALIAS)
+        img.save(img_path)
         i['img'] = '../static/upload/bangumi_img/' + img_path
 
     os.chdir(rec_path)
