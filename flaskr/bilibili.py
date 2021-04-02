@@ -36,12 +36,27 @@ def get_bangumi(bangumi_list, need_img):
     bangumi = []
     if need_img == True:
         for i in bangumi_list:
-            bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
+            if 'pub_index' in i:
+                bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
                             'episode': i['pub_index'], 'img': i['square_cover']})
+            elif 'delay_reason' in i:
+                bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
+                            'episode': i['delay_reason'], 'img': i['square_cover']})
+            else:
+                bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
+                            'episode': 'unknown', 'img': i['square_cover']})
     else:
         for i in bangumi_list:
-            bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
+            # print(i)
+            if 'pub_index' in i:
+                bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
                             'episode': i['pub_index'], 'img': ""})
+            elif 'delay_reason' in i:
+                bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
+                            'episode': i['delay_reason'], 'img': ""})
+            else:
+                bangumi.append({'name': i['title'].replace('/', '-'), 'play_url': i['url'],
+                            'episode': 'unknown', 'img': ""})
     return bangumi
 
 
