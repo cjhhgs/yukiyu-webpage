@@ -56,7 +56,7 @@ def insert_new(db, bangumi_dict):
                     sql = "UPDATE %s SET\
                     play_url =  '%s',  episode = '%s', last_update = '%s'\
                     where title = '%s' "% \
-                    (key, item['play_url'][key], item['episode'], today, item['name'])   
+                    (key, item['play_url'], item['episode'], today, item['name'])   
                     print('try to update:' ,sql)
                     try:
                         print('start excute')
@@ -102,7 +102,7 @@ def insert_new(db, bangumi_dict):
                     sql = "insert into %s\
                             (bangumi_id, title, play_url, episode, last_update)\
                             VALUES(%d, '%s', '%s','%s', '%s')"% \
-                            (key, id, item['name'], item['play_url'][key], item['episode'], today)
+                            (key, id, item['name'], item['play_url'], item['episode'], today)
                     try:
                         print('start insert to %s' %key)
                         print('insert item: ' ,sql)
