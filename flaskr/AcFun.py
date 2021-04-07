@@ -25,8 +25,8 @@ def get_bangumi(html, need_img=False):
         img_pos = html.find('img src=', start,end)
         start = html.find('a href=', start,end)
         cur_end = html.find('"', start+12,end)
-        print('play_url start = %d, end = %d' %(start,cur_end-1))
-        print('play_url:%s' %(html[start:cur_end-1]))
+        # print('play_url start = %d, end = %d' %(start,cur_end-1))
+        # print('play_url:%s' %(html[start:cur_end-1]))
         cur['play_url'] = 'https://www.acfun.cn' + html[start+8:cur_end-1]
         if need_img:
             # TODO: change this to a default pic 
@@ -39,12 +39,18 @@ def get_bangumi(html, need_img=False):
             cur['img'] = ''
         start = html.find('<b>',start,end)
         cur_end = html.find('</b>',start,end)
-        cur['title'] = html[start+3:cur_end]
+        cur['name'] = html[start+3:cur_end]
         start = html.find('第',start,end)
         cur_end = html.find('</p>',start,end)
         cur['episode'] = html[start:cur_end]
         bangumi.append(cur)
     return bangumi
+
+def get_Ac_info(need_img):
+    target_url = 'https://www.acfun.cn/?pagelets=pagelet_bangumi_list&pagelets=pagelet_game,pagelet_douga,pagelet_amusement,pagelet_bangumi_list,pagelet_life,pagelet_tech,pagelet_dance,pagelet_music,pagelet_film,pagelet_fishpond,pagelet_sport&reqID=0&ajaxpipe=1&t=1617334393170'
+    html = url_open(target_url).decode('utf-8')
+    bangumi_list = get_bangumi(html,need_img)
+    return bangumi_list
 
 if __name__ == '__main__':
     # https://www.acfun.cn/?pagelets=pagelet_bangumi_list&pagelets=pagelet_game,pagelet_douga,pagelet_amusement,pagelet_bangumi_list,pagelet_life,pagelet_tech,pagelet_dance,pagelet_music,pagelet_film,pagelet_fishpond,pagelet_sport&reqID=0&ajaxpipe=1&t=1617334393170
