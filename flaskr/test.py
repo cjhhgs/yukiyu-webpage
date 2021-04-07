@@ -21,13 +21,16 @@ def get_list_of_date(day = '2021-04-07', target_table = 'bilibili'):
 
 def merge_seasons(left, right, right_name):
     for i in right:
+        flag = True
         for k in left:
             # if find in left dict
             if i['bangumi_id']==k['bangumi_id']:
                 k['play_url'][right_name] = i['play_url'][right_name]
+                flag = False
         # if not find in left dict, appent new
-        else:
-            left.append(k)
+        if flag == True:
+            left.append(i)
+            
 
 
 
@@ -40,7 +43,9 @@ def get_last_week():
         weekday = last_day.weekday()
         date = last_day.strftime("%Y-%m-%d")
         list_of_day = get_list_of_date(last_day)
-        
+        # update the play_url, make it become a dict
+        for i in list_of_day:
+            i['play_url'] = {'bilibili': i['play_url']}
         temp = {"date":date,"weekday":weekday,"seasons":list_of_day}
         bangumi_list.append(temp)
     new_list = sorted(bangumi_list, key=lambda keys: keys["weekday"])
@@ -60,6 +65,10 @@ def get_last_week():
         temp = {"date":date,"weekday":weekday,"seasons":list_of_day}
         bangumi_list.append(temp)
     new_list = sorted(bangumi_list, key=lambda keys: keys["weekday"])
+    for i in result['result']:
+        for j in new_list:
+            if i['date']==j['date']:
+                merge_seasons(i['seasons'], j['seasons'], 'acfun')
     print('acfun result')
     print(new_list)
 

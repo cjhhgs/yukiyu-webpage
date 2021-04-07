@@ -2,6 +2,7 @@ import pymysql
 import time
 import merge_info
 import difflib
+import traceback
 
 # TODO: packing follow code to a class
 
@@ -114,6 +115,7 @@ def insert_new(db, bangumi_dict):
                         print('insert into %s error!' %key)
             except:
                 print('query error!')
+                traceback.print_exc()
                       
                 
            

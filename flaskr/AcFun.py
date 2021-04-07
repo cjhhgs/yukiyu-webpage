@@ -1,7 +1,7 @@
 import urllib.request
 import os
 import json
-# from PIL import Image
+from PIL import Image
 import io
 
 def url_open(url):
@@ -11,6 +11,27 @@ def url_open(url):
     response = urllib.request.urlopen(req)
     html = response.read()
     return html
+
+def img_save(bangumi, path):
+    rec_path = os.getcwd()
+    os.chdir(path)
+    for i in bangumi:
+        img_url = i['img']
+        if img_url != '../static/upload/default.webp':
+            img_name = i['name']
+            # img_path = path+'/'+img_name+'.'+img_url.split('.')[-1]
+            img_last = img_url.split('.')[-1]
+            end = img_last.find("?")
+            img_path = img_name.replace('/', '-')+'.'+img_last[0:end]
+            print(img_url)
+            img = url_open(img_url)
+            img = io.BytesIO(img)
+            pil_img = Image.open(img)
+            img = pil_img.resize((70,70),Image.ANTIALIAS)
+            img.save(img_path)
+            i['img'] = '../static/upload/bangumi_img/' + img_path
+
+    os.chdir(rec_path)
 
 def get_bangumi(html, need_img=False):
     today_start = html.find('time-block-active')
@@ -47,9 +68,12 @@ def get_bangumi(html, need_img=False):
     return bangumi
 
 def get_Ac_info(need_img):
+    img_folder = '/home/flask-yukiyu/flaskr/static/upload/bangumi_img/'
     target_url = 'https://www.acfun.cn/?pagelets=pagelet_bangumi_list&pagelets=pagelet_game,pagelet_douga,pagelet_amusement,pagelet_bangumi_list,pagelet_life,pagelet_tech,pagelet_dance,pagelet_music,pagelet_film,pagelet_fishpond,pagelet_sport&reqID=0&ajaxpipe=1&t=1617334393170'
     html = url_open(target_url).decode('utf-8')
     bangumi_list = get_bangumi(html,need_img)
+    if need_img == True:
+        img_save(bangumi_list, img_folder)
     return bangumi_list
 
 if __name__ == '__main__':
