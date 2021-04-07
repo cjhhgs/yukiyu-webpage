@@ -30,9 +30,9 @@ axios.get("http://106.15.77.207/bangumi")
             methods: {
                 getPlayUrl: function (item, index) {
                     var urlList = item.play_url;
-                    // var firstKey = Object.keys(urlList)[0];
-                    // return urlList[firstKey];
-                    return urlList;
+                    var firstKey = Object.keys(urlList)[0];
+                    return urlList[firstKey];
+                    // return urlList;
                 },
                 changeWeekMark: function (index) {
                     this.weekMark = index;

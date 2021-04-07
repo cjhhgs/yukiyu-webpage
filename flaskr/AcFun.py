@@ -48,7 +48,7 @@ def get_bangumi(html, need_img=False):
         cur_end = html.find('"', start+12,end)
         # print('play_url start = %d, end = %d' %(start,cur_end-1))
         # print('play_url:%s' %(html[start:cur_end-1]))
-        cur['play_url'] = 'https://www.acfun.cn' + html[start+8:cur_end-1]
+        cur['play_url'] = 'https://www.acfun.cn' + html[start+9:cur_end-1]
         if need_img:
             # TODO: change this to a default pic 
             if img_pos == -1:
@@ -64,6 +64,8 @@ def get_bangumi(html, need_img=False):
         start = html.find('第',start,end)
         cur_end = html.find('</p>',start,end)
         cur['episode'] = html[start:cur_end]
+        for i in cur['episode']:
+            
         bangumi.append(cur)
     return bangumi
 
