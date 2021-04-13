@@ -1,7 +1,7 @@
 import pymysql
 import datetime
 
-def get_list_of_date(day = '2021-04-07', target_table = 'bilibili'):
+def get_list_of_date(day, target_table):
     # date = day.strftime("%Y-%m-%d")
     date = day
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
@@ -32,52 +32,45 @@ def merge_seasons(left, right, right_name):
             left.append(i)
             
 
-
-
-def get_last_week():
+def get_target_week(netName):
     today = datetime.date.today()
-    # get bilibili below
     bangumi_list = list()
     for i in range(0,7):
         last_day = today + datetime.timedelta(days= -i)
         weekday = last_day.weekday()
         date = last_day.strftime("%Y-%m-%d")
-        list_of_day = get_list_of_date(last_day)
+        list_of_day = get_list_of_date(last_day, netName)
         # solve mysql return void tuble when it is null
         if type(list_of_day) == type(()):
             list_of_day = []
         # update the play_url, make it become a dict
         for i in list_of_day:
-            i['play_url'] = {'bilibili': i['play_url']}
+            i['play_url'] = {netName: i['play_url']}
         temp = {"date":date,"weekday":weekday,"seasons":list_of_day}
         bangumi_list.append(temp)
-    new_list = sorted(bangumi_list, key=lambda keys: keys["weekday"])
-    result={"result":new_list}
+    return sorted(bangumi_list, key=lambda keys: keys["weekday"])
+
+def get_last_week():  
+    # get bilibili below
+    bangumi_list = get_target_week('bilibili')
+    result={"result":bangumi_list}
     print('bilibili result')
     print(result)
     # get acfun below
-    bangumi_list = list()
-    for i in range(0,7):
-        last_day = today + datetime.timedelta(days= -i)
-        weekday = last_day.weekday()
-        date = last_day.strftime("%Y-%m-%d")
-        list_of_day = get_list_of_date(last_day, 'acfun')
-        # update the play_url, make it become a dict
-        for i in list_of_day:
-            i['play_url'] = {'acfun': i['play_url']}
-        temp = {"date":date,"weekday":weekday,"seasons":list_of_day}
-        bangumi_list.append(temp)
-    new_list = sorted(bangumi_list, key=lambda keys: keys["weekday"])
+    bangumi_list = get_target_week('acfun')
+    # insert acfun into bilibili
     for i in result['result']:
-        for j in new_list:
+        for j in bangumi_list:
             if i['date']==j['date']:
+                # print('\n\n\n')
                 # print('merge left:')
                 # print(i['seasons'])
+                # print('\n')
                 # print('merge right')
                 # print(j['seasons'])
                 merge_seasons(i['seasons'], j['seasons'], 'acfun')
     print('acfun result')
-    print(new_list)
+    print(bangumi_list)
 
     print('final result')
     print(result)
