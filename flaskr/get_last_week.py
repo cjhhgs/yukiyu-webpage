@@ -43,6 +43,9 @@ def get_last_week():
         weekday = last_day.weekday()
         date = last_day.strftime("%Y-%m-%d")
         list_of_day = get_list_of_date(last_day)
+        # solve mysql return void tuble when it is null
+        if type(list_of_day) == type(()):
+            list_of_day = []
         # update the play_url, make it become a dict
         for i in list_of_day:
             i['play_url'] = {'bilibili': i['play_url']}
@@ -68,6 +71,10 @@ def get_last_week():
     for i in result['result']:
         for j in new_list:
             if i['date']==j['date']:
+                # print('merge left:')
+                # print(i['seasons'])
+                # print('merge right')
+                # print(j['seasons'])
                 merge_seasons(i['seasons'], j['seasons'], 'acfun')
     print('acfun result')
     print(new_list)
