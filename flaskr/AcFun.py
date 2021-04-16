@@ -65,8 +65,7 @@ def get_bangumi(html, need_img=False):
         cur_end = html.find('</p>',start,end)
         cur['episode'] = html[start:cur_end]
         for i in cur['episode']:
-            
-        bangumi.append(cur)
+            bangumi.append(cur)
     return bangumi
 
 def get_Ac_info(need_img):
