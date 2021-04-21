@@ -25,11 +25,11 @@ def get_today_bangumi(bangumi_list):
     last_week = str(today + datetime.timedelta(days=-7))
     today = str(today)
     bangumi = []
-    print(bangumi_list)
+    # print(bangumi_list)
     for it in bangumi_list:
         if today in it['mtime'] or last_week in it['mtime']:
             bangumi.append({'name':it['name'],'play_url':'https://www.agefans.net/detail/'+it['id'],
-                            'episode':it['namefornew'],'img':['../static/upload/default.webp']})
+                            'episode':it['namefornew'],'img':'../static/upload/default.webp'})
     
     return bangumi
 

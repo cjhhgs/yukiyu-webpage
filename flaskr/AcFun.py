@@ -4,6 +4,7 @@ import json
 from PIL import Image
 import io
 
+
 def url_open(url):
     req = urllib.request.Request(url)
     req.add_header(
@@ -11,6 +12,7 @@ def url_open(url):
     response = urllib.request.urlopen(req)
     html = response.read()
     return html
+
 
 def img_save(bangumi, path):
     rec_path = os.getcwd()
@@ -27,59 +29,71 @@ def img_save(bangumi, path):
             img = url_open(img_url)
             img = io.BytesIO(img)
             pil_img = Image.open(img)
-            img = pil_img.resize((70,70),Image.ANTIALIAS)
+            img = pil_img.resize((70, 70), Image.ANTIALIAS)
             img.save(img_path)
             i['img'] = '../static/upload/bangumi_img/' + img_path
 
     os.chdir(rec_path)
 
+
 def get_bangumi(html, need_img=False):
     today_start = html.find('time-block-active')
     today_end = html.find('</div>', today_start)
     bangumi = []
+    # print('start to find from block:')
+    # print(html[today_start:today_end])
+    # print('\n\n\n')
     start = today_start
     end = today_start
     while end < today_end:
         cur = {}
         start = html.find('list-item', start)
-        end = html.find('list-item',start+10)
-        img_pos = html.find('img src=', start,end)
-        start = html.find('a href=', start,end)
-        cur_end = html.find('"', start+12,end)
+        end = html.find('list-item', start+10)
+        # print('find item from:')
+        # print(html[start:end])
+        # print('\n')
+        img_pos = html.find('img src=', start, end)
+        start = html.find('a href=', start, end)
+        cur_end = html.find('"', start+12, end)
         # print('play_url start = %d, end = %d' %(start,cur_end-1))
         # print('play_url:%s' %(html[start:cur_end-1]))
         cur['play_url'] = 'https://www.acfun.cn' + html[start+9:cur_end-1]
         if need_img:
-            # TODO: change this to a default pic 
+            # TODO: change this to a default pic
             if img_pos == -1:
                 cur['img'] = '../static/upload/default.webp'
             else:
-                cur_end=html.find('?',img_pos+10,end)
-                cur['img'] = html[img_pos+10:cur_end] + '?imageView2/1/w/70/h/70'
+                cur_end = html.find('?', img_pos+10, end)
+                cur['img'] = html[img_pos+10:cur_end] + \
+                    '?imageView2/1/w/70/h/70'
         else:
             cur['img'] = ''
-        start = html.find('<b>',start,end)
-        cur_end = html.find('</b>',start,end)
+        start = html.find('<b>', start, end)
+        cur_end = html.find('</b>', start, end)
         cur['name'] = html[start+3:cur_end]
-        start = html.find('第',start,end)
-        cur_end = html.find('</p>',start,end)
+        start = html.find('第', start, end)
+        cur_end = html.find('</p>', start, end)
         cur['episode'] = html[start:cur_end]
-        for i in cur['episode']:
-            bangumi.append(cur)
+        bangumi.append(cur)
     return bangumi
+
 
 def get_Ac_info(need_img):
     img_folder = '/home/flask-yukiyu/flaskr/static/upload/bangumi_img/'
     target_url = 'https://www.acfun.cn/?pagelets=pagelet_bangumi_list&pagelets=pagelet_game,pagelet_douga,pagelet_amusement,pagelet_bangumi_list,pagelet_life,pagelet_tech,pagelet_dance,pagelet_music,pagelet_film,pagelet_fishpond,pagelet_sport&reqID=0&ajaxpipe=1&t=1617334393170'
     html = url_open(target_url).decode('utf-8')
-    bangumi_list = get_bangumi(html,need_img)
+    bangumi_list = get_bangumi(html, need_img)
     if need_img == True:
         img_save(bangumi_list, img_folder)
     return bangumi_list
 
+
 if __name__ == '__main__':
-    # https://www.acfun.cn/?pagelets=pagelet_bangumi_list&pagelets=pagelet_game,pagelet_douga,pagelet_amusement,pagelet_bangumi_list,pagelet_life,pagelet_tech,pagelet_dance,pagelet_music,pagelet_film,pagelet_fishpond,pagelet_sport&reqID=0&ajaxpipe=1&t=1617334393170
+    need_img = True
+    img_folder = '/home/flask-yukiyu/flaskr/static/upload/bangumi_img/'
     target_url = 'https://www.acfun.cn/?pagelets=pagelet_bangumi_list&pagelets=pagelet_game,pagelet_douga,pagelet_amusement,pagelet_bangumi_list,pagelet_life,pagelet_tech,pagelet_dance,pagelet_music,pagelet_film,pagelet_fishpond,pagelet_sport&reqID=0&ajaxpipe=1&t=1617334393170'
     html = url_open(target_url).decode('utf-8')
-    bangumi_list = get_bangumi(html,True)
+    bangumi_list = get_bangumi(html, need_img)
+    if need_img == True:
+        img_save(bangumi_list, img_folder)
     print(bangumi_list)

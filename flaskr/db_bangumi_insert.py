@@ -99,6 +99,7 @@ def insert_new(db, bangumi_dict):
                         except:
                             print('insert into bangumi_list error!')
                             db.rollback()
+                            traceback.print_exc()
                     # we insert this bangumi to current web's table
                     sql = "insert into %s\
                             (bangumi_id, title, play_url, episode, last_update)\
