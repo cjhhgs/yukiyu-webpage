@@ -1,6 +1,7 @@
 # from flaskr.AcFun import get_Ac_info, get_bangumi
 import bilibili
 import AcFun
+import AGE
 
 
 def get_bili_info(need_img):
@@ -22,6 +23,9 @@ def merge_info(need_img = False):
     # append AcFun bangumi below
     ac_list = AcFun.get_Ac_info(need_img)
     bangumi_dict['acfun']=ac_list
+
+    # append AGE bangumi below
+    bangumi_dict['AGE'] = AGE.get_AGE_info(True)
     
     return bangumi_dict
 
