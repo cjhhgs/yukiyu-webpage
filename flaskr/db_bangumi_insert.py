@@ -11,7 +11,7 @@ def nameComp(left, right):
     res = False
     if difflib.SequenceMatcher(None, left, right).quick_ratio() > 0.75:
         res = True
-    elif '中配版' not in left or '中配版' not in right:
+    elif '中配' not in left or '中配' not in right:
         matchPos = difflib.SequenceMatcher(None, left, right).get_matching_blocks()
         for it in matchPos:
             if it.size > 3:
