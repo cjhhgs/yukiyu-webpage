@@ -72,7 +72,7 @@
                                 <span class="chevron-right" @mouseenter="showUrlList(index)" @mouseleave="hideUrlList">
                                     <ul v-show="index==showMark">
                                         <li v-for="(i, name) in item['play_url']">
-                                            <a :href="i">{{name}}</a>
+                                            <a :href="i" target="new">{{name}}</a>
                                         </li>
                                     </ul>
                                 </span>
