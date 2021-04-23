@@ -6,10 +6,26 @@ import traceback
 
 # TODO: packing follow code to a class
 
+# bangumi name compare function
+def nameComp(left, right):
+    res = False
+    if difflib.SequenceMatcher(None, left, right).quick_ratio() > 0.75:
+        res = True
+    elif '中配版' not in left or '中配版' not in right:
+        matchPos = difflib.SequenceMatcher(None, left, right).get_matching_blocks()
+        for it in matchPos:
+            if it.size > 3:
+                res = True
+                break
+    return res
+        
 # check whether a bangumi is in bangumi_list
 # if exist, return the id of it
 # if not, return 0
-def if_exist(db,name):
+def if_exist(db,newName):
+    # in our code, we split chinese name and English name by '-'
+    # so we compare Chinese name and English name seperated
+    newName = newName.split('-')
     cursor=db.cursor()
     # select all and check one by one
     sql = "select * from bangumi_list"
@@ -18,12 +34,11 @@ def if_exist(db,name):
         res = cursor.fetchall()
         print('bangumi_list:', res)
         for i in res:
-            name = i[1].split('-')
-            for item in name:
-                # we use the string diff to approximate matching
-                # optimize the matching rule here if needed
-                if difflib.SequenceMatcher(None, name, item).quick_ratio() > 0.75:
-                    return i[0]
+            curName = i[1].split('-')
+            for c in curName:
+                for n in newName:
+                    if nameComp(c, n):
+                        return i[0]         
         return 0
     except:
         print('not exist in bangumi_list')

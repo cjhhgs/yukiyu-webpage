@@ -18,18 +18,6 @@ def get_list_of_date(day, target_table):
     db.close()
 
     return data
-
-def merge_seasons(left, right, right_name):
-    for i in right:
-        flag = True
-        for k in left:
-            # if find in left dict
-            if i['bangumi_id']==k['bangumi_id']:
-                k['play_url'][right_name] = i['play_url'][right_name]
-                flag = False
-        # if not find in left dict, appent new
-        if flag == True:
-            left.append(i)
             
 
 def get_target_week(netName):
@@ -50,6 +38,24 @@ def get_target_week(netName):
         bangumi_list.append(temp)
     return sorted(bangumi_list, key=lambda keys: keys["weekday"])
 
+def merge_seasons(left, right, right_name):
+    for i in right:
+        flag = True
+        for k in left:
+            # if find in left dict
+            if i['bangumi_id']==k['bangumi_id']:
+                k['play_url'][right_name] = i['play_url'][right_name]
+                flag = False
+        # if not find in left dict, appent new
+        if flag == True:
+            left.append(i)
+
+def merge_list(left, right, right_name):
+    for i in left:
+        for j in right:
+            if i['date'] == j['date']:
+                merge_seasons(i['seasons'], j['seasons'], right_name)
+
 def get_last_week():  
     # get bilibili below
     bangumi_list = get_target_week('bilibili')
@@ -59,17 +65,24 @@ def get_last_week():
     # get acfun below
     bangumi_list = get_target_week('acfun')
     # insert acfun into bilibili
-    for i in result['result']:
-        for j in bangumi_list:
-            if i['date']==j['date']:
-                # print('\n\n\n')
-                # print('merge left:')
-                # print(i['seasons'])
-                # print('\n')
-                # print('merge right')
-                # print(j['seasons'])
-                merge_seasons(i['seasons'], j['seasons'], 'acfun')
+    merge_list(result['result'], bangumi_list, 'acfun')
+    # for i in result['result']:
+    #     for j in bangumi_list:
+    #         if i['date']==j['date']:
+    #             # print('\n\n\n')
+    #             # print('merge left:')
+    #             # print(i['seasons'])
+    #             # print('\n')
+    #             # print('merge right')
+    #             # print(j['seasons'])
+    #             merge_seasons(i['seasons'], j['seasons'], 'acfun')
     print('acfun result')
+    print(bangumi_list)
+
+    # insert AGE into bilibili
+    bangumi_list = get_target_week('AGE')
+    merge_list(result['result'], bangumi_list, 'AGE')
+    print('AGE result')
     print(bangumi_list)
 
     print('final result')
