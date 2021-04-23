@@ -1,3 +1,4 @@
+from time import sleep
 import urllib.request
 import os
 import json
@@ -6,12 +7,27 @@ import io
 
 
 def url_open(url):
+    for i in range(10):
+        res = try_open(url)
+        if res != None:
+            return res
+        print('request url:%s\nfailed!\nretry after 1 sec!'%url)
+        sleep(1)
+    
+    print('urllib.error.HTTPError: HTTP Error 500: Internal Error')
+    return ''.encode('utf-8')
+
+
+def try_open(url):
     req = urllib.request.Request(url)
     req.add_header(
         'User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36')
-    response = urllib.request.urlopen(req)
-    html = response.read()
-    return html
+    try:
+        response = urllib.request.urlopen(req)
+        html = response.read()
+        return html
+    except:
+        return None
 
 
 def img_save(bangumi, path):
@@ -70,7 +86,7 @@ def get_bangumi(html, need_img=False):
             cur['img'] = ''
         start = html.find('<b>', start, end)
         cur_end = html.find('</b>', start, end)
-        cur['name'] = html[start+3:cur_end]
+        cur['name'] = html[start+3:cur_end].replace('/', '-')
         start = html.find('第', start, end)
         cur_end = html.find('</p>', start, end)
         cur['episode'] = html[start:cur_end]
