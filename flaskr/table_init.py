@@ -3,7 +3,7 @@ import traceback
 
 def create_table_bangumi(db, table_name):
     cursor=db.cursor()
-    sql = "CREATE TABLE %s(\
+    sql = "CREATE TABLE if not exists %s(\
             bangumi_id int not NULL,\
             title varchar(50) not NULL,\
             play_url varchar(50) not NULL,\
@@ -47,11 +47,10 @@ def create_table_cast(db):
 def create_table_company(db):
     cursor=db.cursor()
     table_name="company"
-    sql="create table %s\
-        （\
+    sql="create table if not exists %s(\
         company_id int not null,\
         company_name varchar(50) not null,\
-        masterpice vaechar(50),\
+        masterpiece varchar(50),\
         primary key (company_id))ENGINE=InnoDB DEFAULT CHARSET=utf8;"% \
         (table_name)
     try:
@@ -67,12 +66,11 @@ def create_table_company(db):
 def create_table_conduct(db):
     cursor=db.cursor()
     table_name="conduct"
-    sql="create table %s\
-        （\
-        conduct_id int not null,\
-        conduct_name varchar(50) not null,\
-        masterpice vaechar(50),\
-        primary key (conduct_id))ENGINE=InnoDB DEFAULT CHARSET=utf8;"% \
+    sql="""create table if not exists %s(
+        conduct_id int not null,
+        conduct_name varchar(50) not null,
+        masterpiece varchar(50),
+        primary key (conduct_id))ENGINE=InnoDB DEFAULT CHARSET=utf8;"""% \
         (table_name)
     try:
         print('start to execute:')
@@ -83,22 +81,20 @@ def create_table_conduct(db):
         print('create table %s error!'%(table_name))
         traceback.print_exc()
 
-#公司动漫关系
+#动漫-公司关系
 def create_table_bangumi_company(db):
     cursor=db.cursor()
     table_name="bangumi_company"
-    sql="create table %s\
-        （\
+    sql="create table if not exists %s(\
         bangumi_id int not null,\
-        bangumi_name,\
-        company_name varchar(50) not null,\
+        company_id int not null,\
         primary key (bangumi_id),\
-        foreign key (bangumi_id) reference bangumi_list(bangumi_id)\
-        on update casecade\
-        on delete casecade,\
-        foreign key (company_name) reference company(company_name)\
-        on update casecade\
-        on delete casecade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"%\
+        foreign key (bangumi_id) references bangumi_list(bangumi_id)\
+        on update cascade\
+        on delete cascade,\
+        foreign key (company_id) references company(company_id)\
+        on update cascade\
+        on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"%\
         (table_name)
     try:
         print('start to execute:')
@@ -109,22 +105,20 @@ def create_table_bangumi_company(db):
         print('create table %s error!'%(table_name))
         traceback.print_exc()
     
-#监督动漫关系
+#动漫-监督关系
 def create_table_bangumi_conduct(db):
     cursor=db.cursor()
     table_name="bangumi_conduct"
-    sql="create table %s\
-        （\
+    sql="create table if not exists %s(\
         bangumi_id int not null,\
-        bangumi_name,\
-        conduct_name varchar(50) not null,\
+        conduct_id int not null,\
         primary key (bangumi_id),\
-        foreign key (bangumi_id) reference bangumi_list(bangumi_id)\
-        on update casecade\
-        on delete casecade,\
-        foreign key (conduct_name) reference conduct(conduct_name)\
-        on update casecade\
-        on delete casecade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"%\
+        foreign key (bangumi_id) references bangumi_list(bangumi_id)\
+        on update cascade\
+        on delete cascade,\
+        foreign key (conduct_id) references conduct(conduct_id)\
+        on update cascade\
+        on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"% \
         (table_name)
     try:
         print('start to execute:')
@@ -143,9 +137,109 @@ def create_table_bangumi_conduct(db):
 #         (bangumi_id, name, episode, company)
 #         "
 
+#bangumi_company存储过程
+def createStoreProcedureBCompany(db):
+    cursor=db.cursor()
+    sql="""
+        delimiter $$
+        drop procedure if exists insertIntoCompany $$
+        create procedure insertIntoCompany(
+            in id int,
+            in bangumi_name varchar(50),
+            in company_name varchar(50))
+        begin
+            declare companyId int default 0;
+            if company_name not in (select company_name from company) then
+                begin
+                select count(*) into companyId from company;
+                insert into company(company_id,company_name,masterpiece)
+                values 
+                (companyId,company_name,bangumi_name);
+                end;
+            end if;
+            if id not in (select bangumi_id from bangumi_company) then
+                begin
+                insert into bangumi_company(bangumi_id, company_id)
+                values
+                (id, companyId);
+                end;
+            end if;
+
+        end$$
+        delimiter ;
+        """
+    try:
+        print('start to execute:')
+        print(sql)
+        cursor.execute(sql)
+        print('create success !')
+    except:
+        print('create error!')
+        traceback.print_exc()
 
 
+#bangumi_conduct存储过程
+def createStoreProcedureBConduct(db):
+    cursor=db.cursor()
+    sql="""
+        delimiter $$
+        drop procedure if exists insertIntoConduct$$
+        create procedure insertIntoConduct(in id int,in bangumi_name varchar(50),in conduct_name varchar(50))
+        begin
+            declare conductId int default 0;
+            if (conduct_name not in (select conduct_name from conduct)) then
+                begin
+                select count(*) into conductId from conduct;
+                insert into conduct(conduct_id,conduct_name,masterpiece)
+                values 
+                (conductId,conduct_name,bangumi_name);
+                end;
+            end if;
+            if (id not in (select bangumi_id from bangumi_conduct)) then
+                insert into bangumi_conduct(bangumi_id, conduct_id)
+                values
+                (id, conductId);
+            end if;
+        end$$
+        delimiter ;"""
+    try:
+
+        print('start to execute:')
+        print(sql)
+        cursor.execute(sql)
+        print('create success !')
+    except:
+        print('error!')
+        traceback.print_exc()
+
+def testproc(db):
+    cursor=db.cursor()
+    name = "test"
+    sql1 = """delimiter /"""
+    sql2 = """drop procedure if exists %s/"""%\
+        (name)
+    sql3 = """
+        create procedure test(in p1 int, in p2 varchar(50))
+        begin
+        end/"""
+    sql4 = """delimiter ;"""
+    try:
+        print('start to execute:')
+        cursor.execute(sql1)
+        cursor.execute(sql2)
+        cursor.execute(sql3)
+        cursor.execute(sql4)
+        print('create success !')
+    except:
+        print('error!')
+        traceback.print_exc()
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
-    create_bangumi_table(db,'AGE')
+    create_table_conduct(db) 
+    create_table_company(db)
+    create_table_bangumi_company(db)
+    create_table_bangumi_conduct(db)
+    # createStoreProcedureBConduct(db)
+    # createStoreProcedureBCompany(db)
     db.close()
+    
