@@ -6,16 +6,26 @@ import traceback
 
 # TODO: packing follow code to a class
 
+# replace the common str to avoid confusing the nameComp function
+def replaceSuffix(left, right):
+    replaceTarget = [' ', '中配']
+    for i in replaceTarget:
+        left = left.replace(i, '$')
+        right = right.replace(i, '%')
+    return left, right
+
 # bangumi name compare function
 def nameComp(left, right):
     res = False
+    left, right = replaceSuffix(left, right)
     if difflib.SequenceMatcher(None, left, right).quick_ratio() > 0.75:
         res = True
-    elif '中配' not in left or '中配' not in right:
+    else:
         matchPos = difflib.SequenceMatcher(None, left, right).get_matching_blocks()
         for it in matchPos:
             if it.size > 3:
                 res = True
+                # print('same block: "%s"' %(left[it.a:it.a+it.size]))
                 break
     return res
         
@@ -25,7 +35,6 @@ def nameComp(left, right):
 def if_exist(db,newName):
     # in our code, we split chinese name and English name by '-'
     # so we compare Chinese name and English name seperated
-    newName = newName.split('-')
     cursor=db.cursor()
     # select all and check one by one
     sql = "select * from bangumi_list"
@@ -34,11 +43,10 @@ def if_exist(db,newName):
         res = cursor.fetchall()
         print('bangumi_list:', res)
         for i in res:
-            curName = i[1].split('-')
-            for c in curName:
-                for n in newName:
-                    if nameComp(c, n):
-                        return i[0]         
+            curName = i[1]
+            if nameComp(curName, newName):
+                print('compare "%s" and "%s" is True\n\n\n'%(curName,newName))
+                return i[0]         
         return 0
     except:
         print('not exist in bangumi_list')
@@ -129,6 +137,7 @@ def insert_new(db, bangumi_dict):
                     except:
                         db.rollback()
                         print('insert into %s error!' %key)
+                        traceback.print_exc()
             except:
                 print('query error!')
                 traceback.print_exc()
