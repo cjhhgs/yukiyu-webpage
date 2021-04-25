@@ -89,7 +89,7 @@ def get_bangumi(html, need_img=False):
         cur['name'] = html[start+3:cur_end].replace('/', '-').replace("'", " ")
         start = html.find('第', start, end)
         cur_end = html.find('</p>', start, end)
-        cur['episode'] = html[start:cur_end]
+        cur['episode'] = html[start:cur_end].split('>')[-1]
         bangumi.append(cur)
     return bangumi
 
