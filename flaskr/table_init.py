@@ -47,15 +47,19 @@ def create_table_cast(db):
 def create_table_company(db):
     cursor=db.cursor()
     table_name="company"
-    sql="create table if not exists %s(\
-        company_id int not null,\
-        company_name varchar(50) not null,\
-        masterpiece varchar(50),\
-        primary key (company_id))ENGINE=InnoDB DEFAULT CHARSET=utf8;"% \
+    sql="""
+        create table %s(
+        company_id int primary key auto_increment,
+        company_name varchar(50) not null,
+        masterpiece varchar(50)) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""% \
         (table_name)
+    sql2="""drop table if exists bangumi_company;"""
+    sql3="drop table if exists %s;"%(table_name)
     try:
         print('start to execute:')
         print(sql)
+        cursor.execute(sql2)
+        cursor.execute(sql3)
         cursor.execute(sql)
         print('create success !')
     except:
@@ -66,16 +70,18 @@ def create_table_company(db):
 def create_table_conduct(db):
     cursor=db.cursor()
     table_name="conduct"
-    sql="""create table if not exists %s(
-        conduct_id int not null,
+    sql1="drop table if exists bangumi_conduct;"
+    sql2="drop table if exists conduct;"
+    sql3="""create table if not exists conduct(
+        conduct_id int primary key auto_increment,
         conduct_name varchar(50) not null,
-        masterpiece varchar(50),
-        primary key (conduct_id))ENGINE=InnoDB DEFAULT CHARSET=utf8;"""% \
-        (table_name)
+        masterpiece varchar(50))ENGINE=InnoDB DEFAULT CHARSET=utf8;"""
     try:
         print('start to execute:')
-        print(sql)
-        cursor.execute(sql)
+        print(sql3)
+        cursor.execute(sql1)
+        cursor.execute(sql2)
+        cursor.execute(sql3)
         print('create success !')
     except:
         print('create table %s error!'%(table_name))
@@ -85,16 +91,16 @@ def create_table_conduct(db):
 def create_table_bangumi_company(db):
     cursor=db.cursor()
     table_name="bangumi_company"
-    sql="create table if not exists %s(\
-        bangumi_id int not null,\
-        company_id int not null,\
-        primary key (bangumi_id),\
-        foreign key (bangumi_id) references bangumi_list(bangumi_id)\
-        on update cascade\
-        on delete cascade,\
-        foreign key (company_id) references company(company_id)\
-        on update cascade\
-        on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"%\
+    sql="""create table if not exists %s(
+        bangumi_id int not null,
+        company_id int not null,
+        primary key (bangumi_id),
+        foreign key (bangumi_id) references bangumi_list(bangumi_id)
+        on update cascade
+        on delete cascade,
+        foreign key (company_id) references company(company_id)
+        on update cascade
+        on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""%\
         (table_name)
     try:
         print('start to execute:')
@@ -109,16 +115,16 @@ def create_table_bangumi_company(db):
 def create_table_bangumi_conduct(db):
     cursor=db.cursor()
     table_name="bangumi_conduct"
-    sql="create table if not exists %s(\
-        bangumi_id int not null,\
-        conduct_id int not null,\
-        primary key (bangumi_id),\
-        foreign key (bangumi_id) references bangumi_list(bangumi_id)\
-        on update cascade\
-        on delete cascade,\
-        foreign key (conduct_id) references conduct(conduct_id)\
-        on update cascade\
-        on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"% \
+    sql="""create table if not exists %s(
+        bangumi_id int not null,
+        conduct_id int not null,
+        primary key (bangumi_id),
+        foreign key (bangumi_id) references bangumi_list(bangumi_id)
+        on update cascade
+        on delete cascade,
+        foreign key (conduct_id) references conduct(conduct_id)
+        on update cascade
+        on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"""% \
         (table_name)
     try:
         print('start to execute:')
@@ -151,14 +157,16 @@ def createStoreProcedureBCompany(db):
             declare companyId int default 0;
             if company_name not in (select company_name from company) then
                 begin
-                select count(*) into companyId from company;
-                insert into company(company_id,company_name,masterpiece)
+                insert into company(company_name,masterpiece)
                 values 
-                (companyId,company_name,bangumi_name);
+                (company_name,bangumi_name);
                 end;
             end if;
             if id not in (select bangumi_id from bangumi_company) then
                 begin
+                select company_id into companyId
+                from company
+                where company.company_name = company_name;
                 insert into bangumi_company(bangumi_id, company_id)
                 values
                 (id, companyId);
@@ -189,16 +197,21 @@ def createStoreProcedureBConduct(db):
             declare conductId int default 0;
             if (conduct_name not in (select conduct_name from conduct)) then
                 begin
-                select count(*) into conductId from conduct;
-                insert into conduct(conduct_id,conduct_name,masterpiece)
+                
+                insert into conduct(conduct_name,masterpiece)
                 values 
-                (conductId,conduct_name,bangumi_name);
+                (conduct_name,bangumi_name);
                 end;
             end if;
             if (id not in (select bangumi_id from bangumi_conduct)) then
+                begin
+                select conduct_id into conductId
+                from conduct
+                where conduct.conduct_name = conduct_name;
                 insert into bangumi_conduct(bangumi_id, conduct_id)
                 values
                 (id, conductId);
+                end;
             end if;
         end$$
         delimiter ;
@@ -234,12 +247,17 @@ def testproc(db):
     except:
         print('error!')
         traceback.print_exc()
-if __name__ == '__main__':
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+
+# 构造与制作相关的4个表
+def initProduceTbale(db):
     create_table_conduct(db) 
     create_table_company(db)
     create_table_bangumi_company(db)
     create_table_bangumi_conduct(db)
+
+if __name__ == '__main__':
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    initProduceTbale(db)
     # createStoreProcedureBConduct(db)
     # createStoreProcedureBCompany(db)
     db.close()
