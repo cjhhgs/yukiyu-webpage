@@ -1,6 +1,5 @@
 import traceback
 import pymysql
-from pymysql.cursors import Cursor
 from db_bangumi_insert import nameComp
 from moegirl import getProduceInfo
 
@@ -26,7 +25,7 @@ def isIncluded(bangumiName, bangumiInfoList):
 
 def insertConduct(bangumiItem, conduct, db):
     cursor = db.cursor()
-    sql = 'insertIntoConduct(%d, %s, %s)'% \
+    sql = "call insertIntoConduct(%d, '%s', '%s')"% \
             (*bangumiItem, conduct)
     try:
         print('start to execute:')
@@ -38,7 +37,7 @@ def insertConduct(bangumiItem, conduct, db):
 
 def insertCompany(bangumiItem, company, db):
     cursor = db.cursor()
-    sql = 'insertIntoConduct(%d, %s, %s)'% \
+    sql = "call insertIntoCompany(%d, '%s', '%s')"% \
             (*bangumiItem, company)
     try:
         print('start to execute:')
@@ -55,7 +54,8 @@ def insertInfo(bangumiInfoList, db):
     for item in bangumiList:
         index = isIncluded(item[1], bangumiInfoList)
         if index != -1:
-            insertConduct()
+            insertConduct(item, bangumiInfoList[index]['conduct'], db)
+            insertCompany(item, bangumiInfoList[index]['production'], db)
 
 
 
