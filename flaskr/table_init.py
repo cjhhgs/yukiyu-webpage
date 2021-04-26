@@ -201,7 +201,8 @@ def createStoreProcedureBConduct(db):
                 (id, conductId);
             end if;
         end$$
-        delimiter ;"""
+        delimiter ;
+        """
     try:
 
         print('start to execute:')
