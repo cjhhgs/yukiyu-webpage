@@ -47,9 +47,19 @@ def getBangumiInfoList(html):
         production1 = re.search('<li>动画制作：(.*?)</li>', part)
         production2 = re.search('<li>制作：(.*?)</li>', part)
 
+        part = part[part.find('CAST'):]
+        castRes = re.findall('<li>(.*?)</li>', part)
+        # print(castRes)
+        cast = []
+        for i in castRes:
+            cast.append(i.split('：')[-1])
+
+        # print(cast)
+
         res.append({'name':getIndexOfGroup(3, bangumiName1, bangumiName2),
                     'conduct':getIndexOfGroup(1, conduct1, conduct2, conduct3),
-                    'production':getIndexOfGroup(1, production1, production2)})
+                    'production':getIndexOfGroup(1, production1, production2),
+                    'cast':cast})
 
     # drop the last one because it is unexpected data
     return res[:-1]

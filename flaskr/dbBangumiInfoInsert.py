@@ -25,26 +25,30 @@ def isIncluded(bangumiName, bangumiInfoList):
 
 def insertConduct(bangumiItem, conduct, db):
     cursor = db.cursor()
-    sql = "call insertIntoConduct(%d, '%s', '%s')"% \
-            (*bangumiItem, conduct)
+    # sql = "call insertIntoConduct(%d, '%s', '%s');"% \
+    #         (*bangumiItem, conduct)
     try:
-        print('start to execute:')
-        print(sql)
-        cursor.execute(sql)
-        print('execute success!')
+        print('start to call: insertIntoConduct : (%d, %s, %s)'%(*bangumiItem, conduct))
+        cursor.callproc('insertIntoConduct',(*bangumiItem, conduct))
+        # cursor.commit()
+        db.commit()
+        print('call success!')
     except:
+        db.rollback()
         traceback.print_exc()
 
 def insertCompany(bangumiItem, company, db):
     cursor = db.cursor()
-    sql = "call insertIntoCompany(%d, '%s', '%s')"% \
-            (*bangumiItem, company)
+    # sql = "call insertIntoCompany(%d, '%s', '%s');"% \
+    #         (*bangumiItem, company)
     try:
-        print('start to execute:')
-        print(sql)
-        cursor.execute(sql)
-        print('execute success!')
+        print('start to call: insertIntoCompany : (%d, %s, %s)'%(*bangumiItem, company))
+        cursor.callproc('insertIntoCompany',(*bangumiItem, company))
+        # cursor.commit()
+        db.commit()
+        print('call success!')
     except:
+        db.rollback()
         traceback.print_exc()
 
 
@@ -54,8 +58,10 @@ def insertInfo(bangumiInfoList, db):
     for item in bangumiList:
         index = isIncluded(item[1], bangumiInfoList)
         if index != -1:
-            insertConduct(item, bangumiInfoList[index]['conduct'], db)
-            insertCompany(item, bangumiInfoList[index]['production'], db)
+            if bangumiInfoList[index]['conduct'] != '':
+                insertConduct(item, bangumiInfoList[index]['conduct'], db)
+            if bangumiInfoList[index]['production'] != '':
+                insertCompany(item, bangumiInfoList[index]['production'], db)
 
 
 

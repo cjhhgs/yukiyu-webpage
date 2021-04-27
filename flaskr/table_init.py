@@ -151,21 +151,21 @@ def createStoreProcedureBCompany(db):
         create procedure insertIntoCompany(
             in id int,
             in bangumi_name varchar(50),
-            in company_name varchar(50))
+            in new_company_name varchar(50))
         begin
             declare companyId int default 0;
-            if company_name not in (select company_name from company) then
+            if new_company_name not in (select company_name from company) then
                 begin
                 insert into company(company_name,masterpiece)
                 values 
-                (company_name,bangumi_name);
+                (new_company_name,bangumi_name);
                 end;
             end if;
             if id not in (select bangumi_id from bangumi_company) then
                 begin
                 select company_id into companyId
                 from company
-                where company.company_name = company_name;
+                where company.company_name = new_company_name;
                 insert into bangumi_company(bangumi_id, company_id)
                 values
                 (id, companyId);
@@ -191,22 +191,22 @@ def createStoreProcedureBConduct(db):
     sql="""
         delimiter $$
         drop procedure if exists insertIntoConduct$$
-        create procedure insertIntoConduct(in id int,in bangumi_name varchar(50),in conduct_name varchar(50))
+        create procedure insertIntoConduct(in id int,in bangumi_name varchar(50),in new_conduct_name varchar(50))
         begin
             declare conductId int default 0;
-            if (conduct_name not in (select conduct_name from conduct)) then
+            if (new_conduct_name not in (select conduct_name from conduct)) then
                 begin
                 
                 insert into conduct(conduct_name,masterpiece)
                 values 
-                (conduct_name,bangumi_name);
+                (new_conduct_name,bangumi_name);
                 end;
             end if;
             if (id not in (select bangumi_id from bangumi_conduct)) then
                 begin
                 select conduct_id into conductId
                 from conduct
-                where conduct.conduct_name = conduct_name;
+                where conduct.conduct_name = new_conduct_name;
                 insert into bangumi_conduct(bangumi_id, conduct_id)
                 values
                 (id, conductId);
