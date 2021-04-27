@@ -51,6 +51,25 @@ def insertCompany(bangumiItem, company, db):
         db.rollback()
         traceback.print_exc()
 
+def insertCast(bangumiItem, castList, db):
+    cursor = db.cursor()
+
+    for castItem in castList:
+        sql = """
+                insert into bangumi_cast
+                (bangumi_id, actor)
+                VALUES(%d, '%s')
+              """%(bangumiItem[0], castItem)
+        try:
+            print('start to insert into bangumi_cast:')
+            print(sql)
+            cursor.execute(sql)
+            db.commit()
+            print('insert success!')
+        except:
+            print('insert error!')
+            db.rollback()
+            traceback.print_exc()
 
 def insertInfo(bangumiInfoList, db):
     bangumiList = getBangumiList(db)
@@ -62,6 +81,7 @@ def insertInfo(bangumiInfoList, db):
                 insertConduct(item, bangumiInfoList[index]['conduct'], db)
             if bangumiInfoList[index]['production'] != '':
                 insertCompany(item, bangumiInfoList[index]['production'], db)
+            insertCast(item, bangumiInfoList[index]['cast'], db)
 
 
 
