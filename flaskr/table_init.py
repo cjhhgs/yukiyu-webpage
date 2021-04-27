@@ -25,15 +25,14 @@ def create_table_bangumi(db, table_name):
 
 def create_table_cast(db):
     cursor=db.cursor()
-    table_name="cast"
+    table_name="bangumi_cast"
     sql="CREATE TABLE %s(\
         bangumi_id int not null,\
-        character varchar(50),\
-        actor varchar(50),\
-        primary key (bangumi_id),\
+        actor varchar(50) not null,\
+        primary key (bangumi_id, actor),\
         foreign key (bangumi_id) references bangumi_list(bangumi_id)\
-        on update casecade\
-        on delete casecade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"% \
+        on update cascade\
+        on delete cascade) ENGINE=InnoDB DEFAULT CHARSET=utf8;"% \
         (table_name)
     try:
         print('start to execute:')
@@ -250,10 +249,11 @@ def testproc(db):
 
 # 构造与制作相关的4个表
 def initProduceTbale(db):
-    create_table_conduct(db) 
-    create_table_company(db)
-    create_table_bangumi_company(db)
-    create_table_bangumi_conduct(db)
+    # create_table_conduct(db) 
+    # create_table_company(db)
+    # create_table_bangumi_company(db)
+    # create_table_bangumi_conduct(db)
+    create_table_cast(db)
 
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
