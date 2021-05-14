@@ -1,4 +1,14 @@
-
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/icomoon.eot?yx2gmz');
+    src:  url('../fonts/icomoon.eot?yx2gmz#iefix') format('embedded-opentype'),
+      url('../fonts/icomoon.ttf?yx2gmz') format('truetype'),
+      url('../fonts/icomoon.woff?yx2gmz') format('woff'),
+      url('../fonts/icomoon.svg?yx2gmz#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
 .w {
     width: 70%;
     margin: 0 auto;
@@ -6,4 +16,8 @@
 .box_style {
     box-shadow: 9px 9px 9px rgb(36 37 38 / 10%);
     border-radius: 10px;
+}
+.chevron-right {
+    font-family: 'icomoon';
+    cursor: pointer;
 }

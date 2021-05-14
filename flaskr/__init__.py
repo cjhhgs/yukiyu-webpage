@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, session
 import get_last_week
 
 
@@ -26,8 +26,12 @@ def create_app(test_config=None):
 
     # a simple page that says hello
     @app.route('/yukiyu')
-    def main_page():
+    def index_page():
         return render_template('index.html')
+
+    @app.route('/yukiyu/main')
+    def main_page():
+        return render_template('main.html')
 
     @app.route('/bangumi')
     def get_bangumi_info():
@@ -38,6 +42,9 @@ def create_app(test_config=None):
     # def get_last_week_info():
     #     last_week = get_last_week.get_last_week()
     #     return last_week
+
+    # @app.route('/login', methods=['POST'])
+
 
     return app
 
