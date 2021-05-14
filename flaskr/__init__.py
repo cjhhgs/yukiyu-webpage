@@ -33,6 +33,10 @@ def create_app(test_config=None):
     def main_page():
         return render_template('main.html')
 
+    @app.route('/login')
+    def login_page():
+        return render_template('login.html')
+
     @app.route('/bangumi')
     def get_bangumi_info():
         bangumi = get_last_week.get_last_week()

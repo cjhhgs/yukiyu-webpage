@@ -25,20 +25,7 @@ body {
     margin-top: 20px;
     font-size: 28px;
 }
-.left-text .btn {
-    display: inline-block;
-    margin-right: 20px;
-    margin-top: 40px;
-    width: 150px;
-    height: 55px;
-    line-height: 52px;
-    border: 2px solid #fff;
-    border-radius: 30px;
-    color: #fff;
-    font-size: 16px;
-    text-align: center;
-    transition: all .3s;
-}
+
 .left-text .btn:hover {
     color: black;
     background-color: #fff;
