@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, session
 import get_last_week
+from user import userVerify
 
 
 def create_app(test_config=None):
@@ -33,9 +34,16 @@ def create_app(test_config=None):
     def main_page():
         return render_template('main.html')
 
-    @app.route('/login')
-    def login_page():
-        return render_template('login.html')
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if request.method == 'GET':
+            return render_template('login.html')
+        if request.method == 'POST':
+            if userVerify(request.form.get('username'), request.form.get('password')):              
+                session['user'] = (request.form.get('username'), request.form.get('password'))
+                return redirect('/yukiyu/main')
+            else:
+                return redirect('/login')
 
     @app.route('/bangumi')
     def get_bangumi_info():
