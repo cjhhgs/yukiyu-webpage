@@ -23,6 +23,7 @@ def create_table_bangumi(db, table_name):
         print('create table %s error!'%(table_name))
         traceback.print_exc()
 
+#声优表
 def create_table_cast(db):
     cursor=db.cursor()
     table_name="bangumi_cast"
@@ -43,6 +44,7 @@ def create_table_cast(db):
         print('create table %s error!'%(table_name))
         traceback.print_exc()
 
+#制作公司表
 def create_table_company(db):
     cursor=db.cursor()
     table_name="company"
@@ -66,6 +68,7 @@ def create_table_company(db):
         traceback.print_exc()
 
 
+# 监督表
 def create_table_conduct(db):
     cursor=db.cursor()
     table_name="conduct"
