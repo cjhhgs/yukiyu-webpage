@@ -46,6 +46,11 @@ def create_app(test_config=None):
                 flash('用户不存在或密码错误')
                 return redirect('/login')
 
+    @app.route('/yukiyu/database')
+    def database_page():
+        return render_template('database.html')
+
+
     @app.route('/bangumi')
     def get_bangumi_info():
         bangumi = get_last_week.get_last_week()

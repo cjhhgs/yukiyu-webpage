@@ -39,48 +39,17 @@
                 <h2>雪柚数据库</h2>
                 <div id="database-choose">
                     <ul>
-                        <li class="list-on">bangumi_list</li>
-                        <li>bilibili</li>
-                        <li>acfun</li>
-                        <li>AGE</li>
-                        <li>others</li>
+                        <li v-for="(item, index) in databaseList" :class="{list_on:index==databaseIndex}" @click="changeDatabaseIndex(index)">{{item}}</li>
                     </ul>
                 </div>
             </header>
             <div id="database-list" class="list-box">
+                <div class="add" @click="addItem()">添加行</div>
                 <ul>
-                    <li v-for="(item, index) in bilibili">
+                    <li v-for="(item, index) in tables[databaseIndex]">
                         <span class="content" v-for="(entryItem, entryIndex) in item">{{entryItem}}</span>
                         <span class="modify" @click="modifyItem(index, item)">修改</span>
                         <span class="delete" @click="deleteItem(index)">删除</span>
-                    </li>
-                    <li><span class="content">1</span>
-                        <span class="modify">修改</span>
-                        <span class="delete">删除</span>
-                    </li>
-                    <li><span class="content">1</span>
-                        <span class="modify">修改</span>
-                        <span class="delete">删除</span>
-                    </li>
-                    <li><span class="content">1</span>
-                        <span class="modify">修改</span>
-                        <span class="delete">删除</span>
-                    </li>
-                    <li><span class="content">1</span>
-                        <span class="modify">修改</span>
-                        <span class="delete">删除</span>
-                    </li>
-                    <li><span class="content">1</span>
-                        <span class="modify">修改</span>
-                        <span class="delete">删除</span>
-                    </li>
-                    <li><span class="content">1</span>
-                        <span class="modify">修改</span>
-                        <span class="delete">删除</span>
-                    </li>
-                    <li><span class="content">1</span>
-                        <span class="modify">修改</span>
-                        <span class="delete">删除</span>
                     </li>
                 </ul>
                 <!-- modify page start -->
@@ -90,11 +59,12 @@
                             <ul>
                                 <li v-for="(value, name) in modifyTemp">
                                     <span>{{name}}</span>
-                                    <input v-model="name" placeholder="{{name}}">
+                                    <!-- 不应该直接将v-model绑定到v-for的别名上（其相当于局部变量） -->
+                                    <input v-model="modifyTemp[name]">
                                 </li>
                             </ul>
-                            <div class="btn submit">提交</div>
-                            <div class="btn cancle">取消</div>
+                            <div class="btn submit" @click="submitModify()">提交</div>
+                            <div class="btn cancle" @click="closeModifyPage()">取消</div>
                         </div>
                     </div>
                 </div>

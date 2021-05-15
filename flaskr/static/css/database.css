@@ -70,6 +70,7 @@ body {
     background-color: #79bce4;
 }
 .list-box {
+    /* position: relative; */
     margin: 40px;
     margin-top: 0;
     padding: 20px;
@@ -77,6 +78,10 @@ body {
     background-color: #79bce4;
     border-radius: 10px;
     overflow: auto;
+}
+.list-box .add{
+    float: right;
+    margin-right: -5px;
 }
 .list-box>ul>li{
     width: 95%;
@@ -86,7 +91,7 @@ body {
 }
 .list-box>ul>li .content{
     display: inline-block;
-    width: 10%;
+    width: 12%;
     margin: 0 2%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -109,10 +114,10 @@ body {
 }
 .modify-box{
     position: relative;
-    width: 600px;
+    width: 1000px;
     /* height: 60vh; */
     top: 20%;
-    left: calc(50% - 300px);
+    left: calc(50% - 500px);
     padding: 40px 0;
     background-color: #fff;
     box-shadow: 0 6px 15px rgb(195 230 210);
@@ -121,7 +126,7 @@ body {
 .modify-inner-box{
     width: 70%;
     margin: 20px 0;
-    margin-left: 100px;
+    margin-left: 160px;
 }
 .modify-inner-box ul li{
     margin: 20px 0;
@@ -144,7 +149,7 @@ body {
     border-color: #757575;
 }
 .modify-box .submit{
-    margin-left: 40px;
+    margin-left: 190px;
     background-color: #419664;
     border: none;
 }
