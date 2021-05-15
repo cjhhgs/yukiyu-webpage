@@ -110,7 +110,7 @@ body {
 .modify-box{
     position: relative;
     width: 600px;
-    height: 60vh;
+    /* height: 60vh; */
     top: 20%;
     left: calc(50% - 300px);
     padding: 40px 0;
@@ -118,8 +118,23 @@ body {
     box-shadow: 0 6px 15px rgb(195 230 210);
     border-radius: 10px;
 }
-.modify-box .modify-inner-box{
-    margin: 20px auto;
+.modify-inner-box{
+    width: 70%;
+    margin: 20px 0;
+    margin-left: 100px;
+}
+.modify-inner-box ul li{
+    margin: 20px 0;
+    font-size: 18px;
+}
+.modify-inner-box ul li span{
+    display: inline-block;
+    width: 35%;
+}
+.modify-inner-box ul li input{
+    width: 60%;
+    border: none;
+    border-bottom: 1px solid #ddd;
 }
 .modify-box .btn{
     display: inline-block;
@@ -129,6 +144,7 @@ body {
     border-color: #757575;
 }
 .modify-box .submit{
+    margin-left: 40px;
     background-color: #419664;
     border: none;
 }
