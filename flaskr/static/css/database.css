@@ -63,7 +63,7 @@ body {
     font-size: 16px;
     cursor: pointer;
 }
-.list-on {
+.list_on {
     color: #fff;
     /* box-shadow: 0 -6px 15px rgb(36 37 38 / 10%); */
     border-radius: 15px 15px 0 0;

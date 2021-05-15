@@ -34,6 +34,7 @@
         </header>
         <!-- header end -->
         <!-- database start -->
+        {% raw %}
         <div id="database" class="w box_style">
             <header class="storey-title">
                 <h2>雪柚数据库</h2>
@@ -46,7 +47,7 @@
             <div id="database-list" class="list-box">
                 <div class="add" @click="addItem()">添加行</div>
                 <ul>
-                    <li v-for="(item, index) in tables[databaseIndex]">
+                    <li v-for="(item, index) in tables[databaseList[databaseIndex]]">
                         <span class="content" v-for="(entryItem, entryIndex) in item">{{entryItem}}</span>
                         <span class="modify" @click="modifyItem(index, item)">修改</span>
                         <span class="delete" @click="deleteItem(index)">删除</span>
@@ -71,6 +72,7 @@
                 <!-- modify page end -->
             </div>
         </div>
+        {% endraw %}
         <!-- database end -->
     </div>
     <!-- main-page end -->
@@ -83,7 +85,8 @@
     <!-- 官网提供的 axios 在线地址 -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- database js 文件 -->
-    <script src="../static/js/database.js"></script>
+    <!-- <script src="../static/js/database.js"></script> -->
+    <script src="{{url_for('static', filename='js/database.js')}}"></script>
 
 </body>
 

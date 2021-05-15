@@ -1,9 +1,9 @@
 var databaseApp;
 
-axios.get("http://106.15.77.207/yukiyu/database").then(initVue(response));
+axios.get("http://106.15.77.207/yukiyu/database?name1=tables&name2=bangumi_list").then(initVue);
 
 function initVue(_initData) {
-    _initData = response.data;
+    _initData = _initData.data;
     databaseApp = new Vue({
         el: "#database",
         data: {
@@ -28,14 +28,14 @@ function initVue(_initData) {
         methods: {
 
             changeDatabaseIndex: function (index) {
-                var tableName = databaseList[index];
-                if (!(tableName in tables)) {
+                var tableName = this.databaseList[index];
+                if (!(tableName in this.tables)) {
                     var _this = this;
-                    axios.get("http://106.15.77.207/yukiyu/database/" + tableName)
+                    axios.get("http://106.15.77.207/yukiyu/database?name=" + tableName)
                         .then((response) => {
                             data = response.data;
                             _this.tableHeaders[tableName] = data[tableName + 'Header'];
-                            _this.table[tableName] = data[tableName];
+                            _this.tables[tableName] = data[tableName];
                             this.databaseIndex = index;
                         })
                 }
