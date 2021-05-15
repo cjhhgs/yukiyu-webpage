@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>雪柚 yukiyu - 登陆</title>
-    
+
     <!-- <link rel="stylesheet" href="../static/css/base.css">
     
     <link rel="stylesheet" href="../static/css/common.css">
@@ -31,13 +31,21 @@
                     <ul>
                         <li>
                             <label for="username">用户名</label>
-                            <input type="text" id="username" placeholder="4~20 位数字字母下划线" maxlength="20" title="用户名" name="username">
+                            <input type="text" id="username" placeholder="4~20 位数字字母下划线" maxlength="20" title="用户名"
+                                name="username">
                         </li>
                         <li>
                             <label for="password">密 码</label>
                             <input type="password" id="password" placeholder="请输入密码" name="password">
                         </li>
                     </ul>
+                    <!-- 获取闪现消息 -->
+
+                    <div class="error-msg">
+                        {% for message in get_flashed_messages() %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
                     <input type="submit" class="btn" id="btn-green" value="登陆">
                     <a href="/yukiyu" class="btn" id="btn-back">返回</a>
                 </form>

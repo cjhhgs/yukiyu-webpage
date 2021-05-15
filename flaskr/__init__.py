@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 import get_last_week
 from user import userVerify
 
@@ -7,11 +7,11 @@ from user import userVerify
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-    )
-
+    app.secret_key = 'div'
+    # app.config.from_mapping(
+    #     SECRET_KEY='dev',
+    #     DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+    # )
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
@@ -41,8 +41,9 @@ def create_app(test_config=None):
         if request.method == 'POST':
             if userVerify(request.form.get('username'), request.form.get('password')):              
                 session['user'] = (request.form.get('username'), request.form.get('password'))
-                return redirect('/yukiyu/main')
+                return render_template('main.html', user = session['user'])
             else:
+                flash('用户不存在或密码错误')
                 return redirect('/login')
 
     @app.route('/bangumi')
