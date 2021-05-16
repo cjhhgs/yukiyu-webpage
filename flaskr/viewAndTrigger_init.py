@@ -26,6 +26,8 @@ def create_view_detail_info(db):
     except:
         print('create error!')
         traceback.print_exc()
+    cursor.close()
+
 
 def create_trigger(db):
     cursor = db.cursor()
@@ -85,9 +87,17 @@ def create_trigger(db):
         print(sql1)
         cursor.execute(sql1)
         print('create success !')
+    except:
+        print('create error!')
+        traceback.print_exc()
+    try:
         print(sql2)
         cursor.execute(sql2)
         print('create success !')
+    except:
+        print('create error!')
+        traceback.print_exc()
+    try:
         print(sql3)
         cursor.execute(sql3)
         print('create success !')
