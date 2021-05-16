@@ -77,7 +77,10 @@ function initVue(_initData) {
             submitModify: function () {
                 var targetDatabase = this.databaseList[this.databaseIndex];
                 var newInfo = [];
-                var oldInfo = this.tables[targetDatabase][this.modifyIndex];
+                var oldInfo = null;
+                if (this.tables[targetDatabase].length != this.modifyIndex) {
+                    oldInfo = this.tables[targetDatabase][this.modifyIndex];
+                }
                 // var oldInfo = this.bilibili[this.modifyIndex];
                 // for (var i = 0; i < oldInfo.length; i++) {
                 //     var temp = this.modifyTemp[this.bilibiliKeys[i]];

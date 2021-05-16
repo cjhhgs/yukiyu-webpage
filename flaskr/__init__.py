@@ -2,7 +2,8 @@ import os
 from flask import Flask, render_template, request, redirect, session, flash
 import get_last_week
 from user import userVerify
-from databaseCURD import getDatabase
+from databaseCURD import getDatabase, commitChangeToDatabase
+import json
 
 def create_app(test_config=None):
     # create and configure the app
@@ -54,7 +55,12 @@ def create_app(test_config=None):
                 res = getDatabase(agrs)
                 return res
             return render_template('database.html')
-        else:
+        else:           
+            res = json.loads(request.data)
+            print('get data:')
+            print(res)
+            returnStatus = commitChangeToDatabase(res['oldInfo'], res['newInfo'], res['tableName'])
+            return 'return status: ' + str(returnStatus)
 
 
 
