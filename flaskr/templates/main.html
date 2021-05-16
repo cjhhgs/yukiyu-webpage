@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雪柚主页</title>
+
+    <!-- 初始化样式文件 -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
+    <!-- 公共样式文件 -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}">
+    <!-- main样式文件 -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
+</head>
+<body>
+
+    <!-- main-page start -->
+    <div id="main-page">
+        <!-- header start -->
+        <header class="page-head">
+            <ul id="header_list">
+                <li><a href="#">首页</a></li>
+                <li><a href="#">番剧</a></li>
+                {% if user %}
+                    <li id="user-menu">
+                        <a href="#">{{user[0]}}</a>
+                        <div class="user-info">
+                            <p>欢迎您：{{user[0]}}</p>
+                            <a class="logout" href="#">退出登录</a>
+                            <a class="logout" href="\database">查看数据库</a>
+                        </div>
+                        <div class="arrow-up"></div>
+                    </li>
+                {% else %}
+                    <li><a href="/login">请登录</a></li>
+                {% endif %}
+            </ul>
+        </header>
+        <!-- header end -->
+        <aside class="aside-nav box_style">
+            <ul>
+                <li>首页</li>
+                <li class="aside-li-on">番剧</li>
+            </ul>
+        </aside>
+        <!-- bangumi start -->
+        {% raw %}
+        <div id="bangumi" class="w box_style">
+            <header class="storey-title">
+                <h2>番剧</h2>
+                <div id="week-choose">
+                    <ul>
+                        <li v-for="(item, index) in weeks" :class="{list_on:index==weekMark}" @click="changeWeekMark(index)">{{item}}</li>
+                    </ul>
+                </div>
+            </header>
+            <div id="bangumi-list" class="list-box box_style clear-fix">
+                <ul v-for="(pack, weekDay) in bangumiGet" v-show="weekDay==weekMark">
+                    
+                    <li v-for="(item, index) in pack.seasons">
+                        <a :href="getPlayUrl(item, index)" class="pic" target="new"><img :src="item['img']" alt=""></a>
+                        <div class="text">
+                            <!-- TODO: overflow ... -->
+                            <a :href="getPlayUrl(item, index)" class="bangumi-title" target="new">{{item['name']}}</a>
+                            <div class="text-bottom">
+                                <a :href="getPlayUrl(item, index)" class="episode" target="new">{{item['episode']}}</a>
+                                <span class="chevron-right" @mouseenter="showUrlList(index)" @mouseleave="hideUrlList">
+                                    <ul v-show="index==showMark">
+                                        <li v-for="(i, name) in item['play_url']">
+                                            <a :href="i" target="new">{{name}}</a>
+                                        </li>
+                                    </ul>
+                                </span>
+                                
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {% endraw %}
+        <!-- bangumi end -->
+    </div>
+    <!-- main-page end -->
+
+    <!-- javascript -->
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- 官网提供的 axios 在线地址 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- js 动画 -->
+    <script src="{{url_for('static', filename='js/index.js')}}"></script>
+    <!-- js 动态元素 -->
+    <script src="{{url_for('static', filename='js/index_dynamic.js')}}"></script>
+
+</body>
+</html>

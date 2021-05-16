@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雪柚 —— 数据库管理</title>
+
+    <link rel="stylesheet" href="../static/css/base.css">
+
+    <link rel="stylesheet" href="../static/css/common.css">
+
+    <link rel="stylesheet" href="../static/css/database.css">
+
+    <!-- 初始化样式文件 -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
+    <!-- 公共样式文件 -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/common.css')}}">
+    <!-- database样式文件 -->
+    <link rel="stylesheet" href="{{url_for('static', filename='css/database.css')}}">
+
+</head>
+
+<body>
+    <!-- main-page start -->
+    <div id="main-page">
+        <!-- header start -->
+        <header class="page-head">
+            <ul id="header_list">
+                <li><a href="/yukiyu/main">首页</a></li>
+                <li><a href="#">番剧</a></li>
+            </ul>
+        </header>
+        <!-- header end -->
+        <!-- database start -->
+        {% raw %}
+        <div id="database" class="w box_style">
+            <header class="storey-title">
+                <h2>雪柚数据库</h2>
+                <div id="database-choose">
+                    <ul>
+                        <li v-for="(item, index) in databaseList" :class="{list_on:index==databaseIndex}" @click="changeDatabaseIndex(index)">{{item}}</li>
+                    </ul>
+                </div>
+            </header>
+            <div id="database-list" class="list-box">
+                <div class="add" @click="addItem()">添加行</div>
+                <ul>
+                    <li v-for="(item, index) in tables[databaseList[databaseIndex]]">
+                        <span class="content" v-for="(entryItem, entryIndex) in item">{{entryItem}}</span>
+                        <span class="modify" @click="modifyItem(index, item)">修改</span>
+                        <span class="delete" @click="deleteItem(index)">删除</span>
+                    </li>
+                </ul>
+                <!-- modify page start -->
+                <div id="modify-background" v-if="modifyDisplayFlag">
+                    <div class="modify-box">
+                        <div class="modify-inner-box">
+                            <ul>
+                                <li v-for="(value, name) in modifyTemp">
+                                    <span>{{name}}</span>
+                                    <!-- 不应该直接将v-model绑定到v-for的别名上（其相当于局部变量） -->
+                                    <input v-model="modifyTemp[name]">
+                                </li>
+                            </ul>
+                            <div class="btn submit" @click="submitModify()">提交</div>
+                            <div class="btn cancle" @click="closeModifyPage()">取消</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- modify page end -->
+            </div>
+        </div>
+        {% endraw %}
+        <!-- database end -->
+    </div>
+    <!-- main-page end -->
+
+
+
+    <!-- javascript -->
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- 官网提供的 axios 在线地址 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- database js 文件 -->
+    <!-- <script src="../static/js/database.js"></script> -->
+    <script src="{{url_for('static', filename='js/database.js')}}"></script>
+
+</body>
+
+</html>
