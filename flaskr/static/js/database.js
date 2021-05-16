@@ -49,10 +49,10 @@ function initVue(_initData) {
                 var targetDatabase = this.databaseList[this.databaseIndex];
                 // console.log(targetDatabase);
                 // console.log(index);
-                var deleteTarget = this.tables[targetDatabase].splice(index, 1);
+                var deleteTarget = this.tables[targetDatabase].splice(index, 1)[0];
                 // console.log('delete item:')
                 // console.log(deleteTarget)
-                this.submitChanges(deleteTarget, null)
+                this.submitChanges(deleteTarget, null, targetDatabase)
             },
             modifyItem: function (index, item) {
                 this.modifyTemp = {};
@@ -87,15 +87,26 @@ function initVue(_initData) {
                 for (key in this.modifyTemp) {
                     newInfo.push(this.modifyTemp[key]);
                 }
-                this.submitChanges(oldInfo, newInfo);
+                this.submitChanges(oldInfo, newInfo, targetDatabase);
                 // console.log('set temp into target');
                 // console.log('new info:');
                 // console.log(newInfo);
                 this.$set(this.tables[targetDatabase], this.modifyIndex, newInfo);
                 this.closeModifyPage();
             },
-            submitChanges: function (oldInfo, newInfo) {
-
+            submitChanges: function (oldInfo, newInfo, tableName) {
+                var config = {
+                    tableName: tableName,
+                    oldInfo: oldInfo,
+                    newInfo: newInfo
+                }
+                axios.post("http://106.15.77.207/yukiyu/database", config)
+                    .then((response) => {
+                        console.log(response);
+                    })
+                    .catch((response) => {
+                        console.log(response);
+                    })
             },
             closeModifyPage: function () {
                 this.modifyDisplayFlag = false;

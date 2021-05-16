@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, session, flash
 import get_last_week
 from user import userVerify
-from databaseCURD import getTables
+from databaseCURD import getDatabase
 
 def create_app(test_config=None):
     # create and configure the app
@@ -46,13 +46,16 @@ def create_app(test_config=None):
                 flash('用户不存在或密码错误')
                 return redirect('/login')
 
-    @app.route('/yukiyu/database')
+    @app.route('/yukiyu/database', methods=['GET', 'POST'])
     def database_page():
-        agrs = request.args
-        if agrs:
-            res = getTables(agrs)
-            return res
-        return render_template('database.html')
+        if request.method == 'GET':
+            agrs = request.args
+            if agrs:
+                res = getDatabase(agrs)
+                return res
+            return render_template('database.html')
+        else:
+
 
 
     @app.route('/bangumi')
