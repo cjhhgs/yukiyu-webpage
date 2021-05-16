@@ -13,7 +13,7 @@ function initVue(_initData) {
                 bangumi_list: _initData['bangumi_listHeader'],
             },
             // 存放数据表的数据
-            tables: {               
+            tables: {
                 bangumi_list: _initData['bangumi_list'],
             },
             bilibili: [[20321, '入间同学入魔了 第二季', 'https://www.bilibili.com/bangumi/play/ss38224', '第1话', '2021-05-15'],
@@ -29,50 +29,63 @@ function initVue(_initData) {
 
             changeDatabaseIndex: function (index) {
                 var tableName = this.databaseList[index];
-                if (!(tableName in this.tables)) {
-                    var _this = this;
-                    axios.get("http://106.15.77.207/yukiyu/database?name=" + tableName)
-                        .then((response) => {
-                            data = response.data;
-                            _this.tableHeaders[tableName] = data[tableName + 'Header'];
-                            _this.tables[tableName] = data[tableName];
-                            this.databaseIndex = index;
-                        })
-                }
-                this.databaseIndex = index;
+                var _this = this;
+                axios.get("http://106.15.77.207/yukiyu/database?name=" + tableName)
+                    .then((response) => {
+                        data = response.data;
+                        _this.tableHeaders[tableName] = data[tableName + 'Header'];
+                        _this.tables[tableName] = data[tableName];
+                        this.databaseIndex = index;
+                    })
             },
 
 
 
             // database CURD part
             deleteItem: function (index) {
-                this.bilibili.splice(index, 1)
+                // this.bilibili.splice(index, 1)
+                var targetDatabase = this.databaseList[this.databaseIndex];
+                var deleteTarget = this.tables[targetDatabase].splice(index, 1)
+                this.submitChanges(deleteTarget, null)
             },
             modifyItem: function (index, item) {
                 this.modifyTemp = {};
+                var targetDatabase = this.databaseList[this.databaseIndex];
                 // console.log(item);
                 for (var x = 0; x < item.length; x++) {
-                    this.$set(this.modifyTemp, this.bilibiliKeys[x], item[x]);
+                    this.$set(this.modifyTemp, this.tableHeaders[targetDatabase][x], item[x]);
+                    // this.$set(this.modifyTemp, this.bilibiliKeys[x], item[x]);
                     // this.modifyTemp.$set(this.bilibiliKeys[x], item[x]);
                 }
+                // console.log('modify temp below:');
                 // console.log(this.modifyTemp);
                 // console.log(this.modifyTemp['bangumi_id']);
                 this.modifyIndex = index;
                 this.modifyDisplayFlag = true;
             },
             addItem: function () {
-                this.modifyItem(this.bilibili.length, Array(this.bilibiliKeys.length).fill(""));
+                var targetDatabase = this.databaseList[this.databaseIndex];
+                this.modifyItem(this.tables[targetDatabase].length, Array(this.tableHeaders[targetDatabase].length).fill(""));
+                // this.modifyItem(this.bilibili.length, Array(this.bilibiliKeys.length).fill(""));
             },
             submitModify: function () {
+                var targetDatabase = this.databaseList[this.databaseIndex];
                 var newInfo = [];
-                var oldInfo = this.bilibili[this.modifyIndex];
-                for (var i = 0; i < this.bilibiliKeys.length; i++) {
-                    var temp = this.modifyTemp[this.bilibiliKeys[i]];
-                    newInfo.push(temp);
-                    // this.bilibili[this.modifyIndex][i] = temp;
+                var oldInfo = this.tables[targetDatabase][this.modifyIndex];
+                // var oldInfo = this.bilibili[this.modifyIndex];
+                // for (var i = 0; i < oldInfo.length; i++) {
+                //     var temp = this.modifyTemp[this.bilibiliKeys[i]];
+                //     newInfo.push(temp);
+                //     // this.bilibili[this.modifyIndex][i] = temp;
+                // }
+                for (key in this.modifyTemp) {
+                    newInfo.push(this.modifyTemp[key]);
                 }
                 this.submitChanges(oldInfo, newInfo);
-                this.$set(this.bilibili, this.modifyIndex, newInfo);
+                // console.log('set temp into target');
+                // console.log('new info:');
+                // console.log(newInfo);
+                this.$set(this.tables[targetDatabase], this.modifyIndex, newInfo);
                 this.closeModifyPage();
             },
             submitChanges: function (oldInfo, newInfo) {
