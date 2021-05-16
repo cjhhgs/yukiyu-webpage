@@ -33,8 +33,10 @@ function initVue(_initData) {
                 axios.get("http://106.15.77.207/yukiyu/database?name=" + tableName)
                     .then((response) => {
                         data = response.data;
-                        _this.tableHeaders[tableName] = data[tableName + 'Header'];
-                        _this.tables[tableName] = data[tableName];
+                        _this.$set(_this.tableHeaders, tableName, data[tableName + 'Header']);
+                        _this.$set(_this.tables, tableName, data[tableName]);
+                        // _this.tableHeaders[tableName] = data[tableName + 'Header'];
+                        // _this.tables[tableName] = data[tableName];
                         this.databaseIndex = index;
                     })
             },
@@ -45,7 +47,11 @@ function initVue(_initData) {
             deleteItem: function (index) {
                 // this.bilibili.splice(index, 1)
                 var targetDatabase = this.databaseList[this.databaseIndex];
-                var deleteTarget = this.tables[targetDatabase].splice(index, 1)
+                // console.log(targetDatabase);
+                // console.log(index);
+                var deleteTarget = this.tables[targetDatabase].splice(index, 1);
+                // console.log('delete item:')
+                // console.log(deleteTarget)
                 this.submitChanges(deleteTarget, null)
             },
             modifyItem: function (index, item) {
