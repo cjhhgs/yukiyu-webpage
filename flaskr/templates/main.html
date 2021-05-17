@@ -24,11 +24,11 @@
                 <li><a href="#">番剧</a></li>
                 {% if user %}
                     <li id="user-menu">
-                        <a href="#">{{user[0]}}</a>
+                        <a href="#">{{user}}</a>
                         <div class="user-info">
-                            <p>欢迎您：{{user[0]}}</p>
-                            <a class="logout" href="#">退出登录</a>
-                            <a class="logout" href="\database">查看数据库</a>
+                            <p>欢迎您：{{user}}</p>
+                            <a class="logout" href="/logout">退出登录</a>
+                            <a class="logout" href="/yukiyu/database">查看数据库</a>
                         </div>
                         <div class="arrow-up"></div>
                     </li>

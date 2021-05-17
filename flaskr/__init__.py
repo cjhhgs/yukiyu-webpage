@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask_login import LoginManager, login_user, current_user, login_required
 import get_last_week
-from user import userVerify
+from user import userVerify, User, get_user
 from databaseCURD import getDatabase, commitChangeToDatabase
 import json
 
@@ -13,6 +14,14 @@ def create_app(test_config=None):
     #     SECRET_KEY='dev',
     #     DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     # )
+    login_manager = LoginManager()  # 实例化登录管理对象
+    login_manager.init_app(app)  # 初始化应用
+    login_manager.login_view = 'login'  # 设置用户登录视图函数 endpoint
+    
+    @login_manager.user_loader  # 定义获取登录用户的方法
+    def load_user(user_id):
+        return User.get(user_id)
+
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
@@ -40,14 +49,34 @@ def create_app(test_config=None):
         if request.method == 'GET':
             return render_template('login.html')
         if request.method == 'POST':
-            if userVerify(request.form.get('username'), request.form.get('password')):              
-                session['user'] = (request.form.get('username'), request.form.get('password'))
-                return render_template('main.html', user = session['user'])
+            user_name = request.form.get('username')
+            password = request.form.get('password')
+            user_info = get_user(user_name)
+            emsg = None
+            if user_info is None:
+                emsg = '该用户名不存在'
             else:
-                flash('用户不存在或密码错误')
+                user = User(user_info)
+                if user.verify_password(password):  # 校验密码
+                    login_user(user)  # 创建用户 Session
+                    # return redirect(request.args.get('next') or url_for('main_page'))
+                else:
+                    emsg = "密码有误"
+
+            if emsg is None:
+                return render_template(request.args.get('next') or url_for('main_page'), user = current_user.username)
+            else:
+                flash(emsg)
                 return redirect('/login')
+            # if userVerify(request.form.get('username'), request.form.get('password')):              
+            #     session['user'] = (request.form.get('username'), request.form.get('password'))
+            #     return render_template('main.html', user = session['user'])
+            # else:
+            #     flash('用户不存在或密码错误')
+            #     return redirect('/login')
 
     @app.route('/yukiyu/database', methods=['GET', 'POST'])
+    @login_required
     def database_page():
         if request.method == 'GET':
             agrs = request.args
