@@ -69,6 +69,7 @@ def dropUser(name):
         print('start to execute:')
         print(sql)
         cursor.execute(sql)
+        db.commit()
         print('drop success !')
     except:
         print('drop user error!')
@@ -83,6 +84,7 @@ def dropUser(name):
         print('start to execute:')
         print(sql2)
         cursor.execute(sql2)
+        db.commit()
         print('delete user success !')
     except:
         print('delete user error!')
@@ -326,7 +328,7 @@ def privilegeOfAllUser():
 def printAllUser():
     db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor=db.cursor(pymysql.cursors.DictCursor)
-    sql = "select * from yukiyu.user;"
+    sql = "select if_manager, user_id, name, privilege  from yukiyu.user;"
     try:
         print('start to execute:')
         print(sql)
@@ -338,7 +340,7 @@ def printAllUser():
     data = cursor.fetchall()
     print(data)
 
-#返回密码hash值
+#返回用户密码hash值
 def getPassword(name):
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu",user="root", password="123456", charset="utf8")
     cursor=db.cursor(pymysql.cursors.DictCursor)
@@ -370,7 +372,7 @@ if __name__ == '__main__':
     #privilegeOfAllUser()
     #privilegeOfUser('cyy')
     
-    #printAllUser()
+    printAllUser()
     getPassword('xxx')
 
     db.close()
