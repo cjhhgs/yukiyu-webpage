@@ -1,6 +1,10 @@
 import pymysql
 import datetime
 
+# via veiw to get the detail info of a target bangumi
+def get_detail_info(id):
+    return 'detail bangumi info get !'
+
 def get_list_of_date(day, target_table):
     # date = day.strftime("%Y-%m-%d")
     date = day

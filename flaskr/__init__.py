@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from flask_login import LoginManager, login_user, current_user, login_required
-import get_last_week
+from get_last_week import get_last_week, get_detail_info
 from user import userVerify, User, get_user
 from databaseCURD import getDatabase, commitChangeToDatabase
 import json
@@ -95,7 +95,15 @@ def create_app(test_config=None):
 
     @app.route('/bangumi')
     def get_bangumi_info():
-        bangumi = get_last_week.get_last_week()
+        agrs = request.args
+        bangumi = None
+        if agrs:
+            # print('get agrs from client: ')
+            # print(agrs)
+            # print(agrs.get('id'))
+            bangumi = get_detail_info(agrs.get('id'))
+        else:
+            bangumi = get_last_week()
         return bangumi
 
     # @app.route('/lastweek')

@@ -42,6 +42,16 @@ axios.get("http://106.15.77.207/bangumi")
                 },
                 hideUrlList: function () {
                     this.showMark = -1;
+                },
+
+                getDetailInfo: function(item){
+                    var id = item.bangumi_id;
+                    axios.get("http://106.15.77.207/bangumi?id="+id)
+                        .then((response) => {
+                            var data = response.data;
+                            console.log('get info from server:');
+                            console.log(data);
+                        })
                 }
             }
         })
