@@ -1,3 +1,5 @@
+#此页为存储过程
+
 import pymysql
 import traceback
 
@@ -83,6 +85,26 @@ def createStoreProcedureBConduct(db):
     except:
         print('error!')
         traceback.print_exc()
+
+
+#user存储过程
+def createStoreProcedureUser(db):
+    cursor= db.cursor()
+    sql="""
+        delimiter $$
+        drop procedure if exists insert_user$$
+        create procedure insert_user(
+            in name varchar(20), 
+            in password varchar(128), 
+            in privilege char(4)
+        )
+        begin
+            insert into user(name, password, privilege)
+            values(name, password,privilege);
+        end$$
+        delimiter ;
+    """
+
 
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')

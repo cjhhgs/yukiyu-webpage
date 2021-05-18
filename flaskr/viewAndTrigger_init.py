@@ -29,7 +29,7 @@ def create_view_detail_info(db):
     cursor.close()
 
 
-def create_trigger(db):
+def create_trigger_bangumi(db):
     cursor = db.cursor()
     #delete_on_bili
     sql1="""
@@ -164,10 +164,11 @@ def create_func_ifexist(db):
         traceback.print_exc()
     
 
+
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     create_view_detail_info(db) #create view
     create_func_ifexist(db)
-    create_trigger(db)  #create tigger， 需要手动创建
+    create_trigger_bangumi(db)  #create tigger， 需要手动创建
     db.close()
     

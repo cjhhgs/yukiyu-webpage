@@ -48,7 +48,7 @@ def create_table_bangumi(db, table_name):
 def create_table_cast(db):
     cursor=db.cursor()
     table_name="bangumi_cast"
-    sql="""CREATE TABLE %s(
+    sql="""CREATE TABLE if not exists %s(
         bangumi_id int not null,
         actor varchar(50) not null,
         primary key (bangumi_id, actor),
@@ -157,6 +157,30 @@ def create_table_bangumi_conduct(db):
     except:
         print('create table %s error!'%(table_name))
         traceback.print_exc()
+
+
+#创用户表
+def create_table_user(db):
+    cursor=db.cursor()
+    sql = """
+        create table if not exists user(
+            if_manager enum('Y','N') not null default 'N',
+            user_id int auto_increment,
+            name varchar(20) ,
+            password varchar(128) not null,
+            privilege char(4) not null default 'YNNN',
+            primary key(user_id),
+            unique key(name)
+        )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    """
+    try:
+        print('start to execute:')
+        print(sql)
+        cursor.execute(sql)
+        print('create success !')
+    except:
+        print('create table error!')
+        traceback.print_exc()
     
 
 # def create_view_bangumi_cast(db):
@@ -166,7 +190,7 @@ def create_table_bangumi_conduct(db):
 #         (bangumi_id, name, episode, company)
 #         "
 
-# 构造与制作相关的4个表
+# 构造与制作相关的表
 def initProduceTbale(db):
     create_table_conduct(db) 
     create_table_company(db)
@@ -175,11 +199,12 @@ def initProduceTbale(db):
     create_table_cast(db)
 
 if __name__ == '__main__':
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
     create_table_bangumi_list(db)
     create_table_bangumi(db,'bilibili')
     create_table_bangumi(db,"acfun")
     create_table_bangumi(db,"AGE")
     initProduceTbale(db)
+    create_table_user(db)
     db.close()
     

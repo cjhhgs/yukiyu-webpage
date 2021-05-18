@@ -1,36 +1,60 @@
 import pymysql
 import traceback
+from werkzeug.security import check_password_hash, generate_password_hash
+from itertools import chain
 
 
-
-#默认创建普通用户，授权select 所有表
+#默认创建普通用户，授权select
 def createUser(name,password):
     db = pymysql.connect(host="localhost", port=3306, db="mysql", user="root", password="123456",charset='utf8')
     cursor = db.cursor()
     host = '%'
     sql1 = "create user '%s'@'%s' identified by '%s';"%\
-    (name,host,password)
-    sql2 = """
-    grant select on yukiyu.* to '%s'@'%s';
-    """%\
-    (name,host)
+        (name,host,password)
+    sql11="grant select on yukiyu.* to '%s'@'%s';"%\
+    (name, host)
+   
+    cursor.execute("select user from db")
+    elems = cursor.fetchall()
+    res = list(chain.from_iterable(elems))
+    print(res)
+    if name in res:
+        print("用户%s已存在"/(name))
+        return
+
     try:
         print('start to execute:')
         print(sql1)
+        print(sql11)
         cursor.execute(sql1)
+        cursor.execute(sql11)
         print('create success !')
     except:
         print('create user error!')
         traceback.print_exc()
+    db.close()
 
+
+    #在yukiyu库中的user插入同样
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
+    cursor=db.cursor()
+    data = privilegeOfUser(name)
+    priv = data['privilege']
+    sql2 = """
+    insert into user(name,password,privilege) 
+    values
+    ('%s','%s','%s');"""%\
+    (name,generate_password_hash(password),priv)
     try:
         print('start to execute:')
         print(sql2)
         cursor.execute(sql2)
-        print('grant success !')
+        db.commit()
+        print('insert success !')
     except:
-        print('grant error!')
+        print('insert error!')
         traceback.print_exc()
+
     cursor.close()
     db.close()
 
@@ -45,10 +69,28 @@ def dropUser(name):
         print('start to execute:')
         print(sql)
         cursor.execute(sql)
-        print('create success !')
+        print('drop success !')
     except:
-        print('create user error!')
+        print('drop user error!')
         traceback.print_exc()
+
+    sql2 = """
+    delete from yukiyu.user
+    where name = '%s';
+    """%\
+    (name)
+    try:
+        print('start to execute:')
+        print(sql2)
+        cursor.execute(sql2)
+        print('delete user success !')
+    except:
+        print('delete user error!')
+        traceback.print_exc()
+
+
+    cursor.close()
+    db.close()
 
 
 #授权为超级用户，实现所有权限
@@ -68,6 +110,25 @@ def grantSuperUser(name):
     except:
         print('grant error!')
         traceback.print_exc()
+
+    data = privilegeOfUser(name)
+    priv = data['privilege']
+    sql2 = """
+    update yukiyu.user
+    set privilege = '%s'
+    where name = '%s';
+    """%\
+    (priv,name)
+    try:
+        print('start to execute:')
+        print(sql2)
+        cursor.execute(sql2)
+        print('update success !')
+    except:
+        print('update error!')
+        traceback.print_exc()
+
+
     cursor.close()
     db.close()
 
@@ -98,6 +159,24 @@ def grantOrdinartUser(name):
     except:
         print('grant error!')
         traceback.print_exc()
+
+    data = privilegeOfUser(name)
+    priv = data['privilege']
+    sql3 = """
+    update yukiyu.user
+    set privilege = '%s'
+    where name = '%s';
+    """%\
+    (priv,name)
+    try:
+        print('start to execute:')
+        print(sql3)
+        cursor.execute(sql3)
+        print('update success !')
+    except:
+        print('update error!')
+        traceback.print_exc()
+    
     cursor.close()
     db.close()
 
@@ -116,7 +195,26 @@ def addPrivForUser(name,privilege):
     except:
         print('grant error!')
         traceback.print_exc()
+
+    data = privilegeOfUser(name)
+    priv = data['privilege']
+    sql2 = """
+    update yukiyu.user
+    set privilege = '%s'
+    where name = '%s';
+    """%\
+    (priv,name)
+    try:
+        print('start to execute:')
+        print(sql2)
+        cursor.execute(sql2)
+        print('update success !')
+    except:
+        print('update error!')
+        traceback.print_exc()
+    
     cursor.close()
+    db.close()
 
 #删除指定用户的某权限
 def delPrivForUser(name,privilege):
@@ -133,7 +231,26 @@ def delPrivForUser(name,privilege):
     except:
         print('grant error!')
         traceback.print_exc()
+    
+    data = privilegeOfUser(name)
+    priv = data['privilege']
+    sql2 = """
+    update yukiyu.user
+    set privilege = '%s'
+    where name = '%s';
+    """%\
+    (priv,name)
+    try:
+        print('start to execute:')
+        print(sql2)
+        cursor.execute(sql2)
+        print('update success !')
+    except:
+        print('update error!')
+        traceback.print_exc()
+
     cursor.close()
+    db.close()
 
 
 #查询指定用户权限
@@ -206,16 +323,54 @@ def privilegeOfAllUser():
     print(list)
     return list
 
+def printAllUser():
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
+    cursor=db.cursor(pymysql.cursors.DictCursor)
+    sql = "select * from yukiyu.user;"
+    try:
+        print('start to execute:')
+        print(sql)
+        cursor.execute(sql)
+        print('success !')
+    except:
+        print('error!')
+        traceback.print_exc()
+    data = cursor.fetchall()
+    print(data)
+
+#返回密码hash值
+def getPassword(name):
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu",user="root", password="123456", charset="utf8")
+    cursor=db.cursor(pymysql.cursors.DictCursor)
+    sql = "select password from yukiyu.user where name = '%s'"%\
+        (name)
+    try:
+        print('start to execute:')
+        print(sql)
+        cursor.execute(sql)
+        print('success !')
+    except:
+        print('error!')
+        traceback.print_exc()
+    
+    data = cursor.fetchall()
+    password_hash = data[0]['password']
+    
+    print(password_hash)
+    return password_hash
 
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
-    #createUser('cy','123456')
+    #dropUser('xxx')
+    #createUser('xxx','123456')
     #grantSuperUser('cy')
-    grantOrdinartUser('cy')
-    addPrivForUser('cy','delete')
-    delPrivForUser('cy','delete')
-    privilegeOfAllUser()
-    privilegeOfUser('cy')
-    #dropUser('cy')
+    #grantOrdinartUser('cyy')
+    #addPrivForUser('cyy','delete')
+    #delPrivForUser('cyy','delete')
+    #privilegeOfAllUser()
+    #privilegeOfUser('cyy')
+    
+    #printAllUser()
+    getPassword('xxx')
 
     db.close()
