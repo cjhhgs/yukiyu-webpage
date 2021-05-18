@@ -106,6 +106,9 @@ def getTableNames(user):
     if user not in getSuperUser():
         res.remove('user_list')
     # res = ['bangumi_list', 'bilibili', 'acfun', 'AGE', 'company', 'conduct', 'bangumi_conduct', 'bangumi_company', 'bangumi_cast']
+    # 将主表放在最前面
+    res.remove('bangumi_list')
+    res.insert(0, 'bangumi_list')
     return res
     
 # get all tables, including table names and data
