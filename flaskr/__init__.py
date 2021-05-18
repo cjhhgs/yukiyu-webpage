@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, session, flash
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 import get_last_week
 from get_last_week import get_last_week, get_detail_info
-from user import userVerify, User, get_user, create_user
+from user import User, get_user, create_user
 from databaseCURD import getDatabase, commitChangeToDatabase
 import json
 
@@ -105,7 +105,7 @@ def create_app(test_config=None):
         if request.method == 'GET':
             agrs = request.args
             if agrs:
-                res = getDatabase(agrs)
+                res = getDatabase(agrs, current_user.username)
                 return res
             return render_template('database.html')
         else:           

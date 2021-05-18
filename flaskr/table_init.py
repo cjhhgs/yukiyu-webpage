@@ -163,7 +163,7 @@ def create_table_bangumi_conduct(db):
 def create_table_user(db):
     cursor=db.cursor()
     sql = """
-        create table if not exists user(
+        create table if not exists user_list(
             if_manager enum('Y','N') not null default 'N',
             user_id int auto_increment,
             name varchar(20) ,
@@ -199,12 +199,12 @@ def initProduceTbale(db):
     create_table_cast(db)
 
 if __name__ == '__main__':
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
-    create_table_bangumi_list(db)
-    create_table_bangumi(db,'bilibili')
-    create_table_bangumi(db,"acfun")
-    create_table_bangumi(db,"AGE")
-    initProduceTbale(db)
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    # create_table_bangumi_list(db)
+    # create_table_bangumi(db,'bilibili')
+    # create_table_bangumi(db,"acfun")
+    # create_table_bangumi(db,"AGE")
+    # initProduceTbale(db)
     create_table_user(db)
     db.close()
     

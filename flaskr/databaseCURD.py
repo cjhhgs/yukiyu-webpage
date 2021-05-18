@@ -5,7 +5,9 @@ import pymysql
 global db
 
 # TODO: improve the robustness
-def checkValibleTableName(targetTable):
+def checkValibleTableName(targetTable, user):
+    if user != None and targetTable == 'user_list':
+        return user in getSuperUser()
     return targetTable != None
 
 # this function call updataItem, insertItem, deleteItem
@@ -13,10 +15,10 @@ def checkValibleTableName(targetTable):
 # if oldInfo is None, call insert
 # if newInfo is None, call delete
 # else, call updata
-def commitChangeToDatabase(oldInfo, newInfo, targetTable):
+def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
     global db
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
-    if oldInfo == None and newInfo == None or not checkValibleTableName(targetTable):
+    if oldInfo == None and newInfo == None or not checkValibleTableName(targetTable, user):
         print('error ! invalid change!')
         print('oldInfo:', oldInfo)
         print('newInfo:', newInfo)
@@ -75,23 +77,39 @@ def getTableData(tableName):
     cursor.close()
     return res
 
-def getTableNames():
-    # cursor = db.cursor()
-    # print('start to get table names from yukiyu')
-    # sql = "select table_name from information_schema.tables as tb where tb.table_schema = 'yukiyu'"
-    # cursor.execute(sql)
-    # res = cursor.fetchall()
-    # # print('fetch res :')
-    # # print(res)
-    # res = signColumnsShuffle(res)
-    # print('success ! \nget result: ')
+def getSuperUser():
+    cursor = db.cursor()
+    sql = "select name from user_list where if_manager = 'Y'"
+    print('start to execute:')
+    print(sql)
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    res = signColumnsShuffle(res)
+    print('execute success!')
+    print('result:' ,res)
+    cursor.close()
+    return res
+
+def getTableNames(user):
+    cursor = db.cursor()
+    print('start to get table names from yukiyu')
+    sql = "select table_name from information_schema.tables as tb where tb.table_schema = 'yukiyu'"
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    # print('fetch res :')
     # print(res)
-    # cursor.close()
-    res = ['bangumi_list', 'bilibili', 'acfun', 'AGE', 'company', 'conduct', 'bangumi_conduct', 'bangumi_company', 'bangumi_cast']
+    res = signColumnsShuffle(res)
+    print('success ! \nget result: ')
+    print(res)
+    cursor.close()
+    # 非超级用户不允许查看user列表
+    if user not in getSuperUser():
+        res.remove('user_list')
+    # res = ['bangumi_list', 'bilibili', 'acfun', 'AGE', 'company', 'conduct', 'bangumi_conduct', 'bangumi_company', 'bangumi_cast']
     return res
     
 # get all tables, including table names and data
-def getDatabase(target):
+def getDatabase(target, user):
     global db
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     print('get url args:')
@@ -105,7 +123,7 @@ def getDatabase(target):
             res[target[key]] = getTableData(target[key])
         else:
             # 获取数据库中的所有数据表名
-            res['tableList'] = getTableNames()
+            res['tableList'] = getTableNames(user)
     return res
 
 # return the string: key1=value1 seperate key2=valuue2...
