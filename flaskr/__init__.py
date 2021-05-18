@@ -1,8 +1,15 @@
 import os
+<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from flask_login import LoginManager, login_user, current_user, login_required
 from get_last_week import get_last_week, get_detail_info
 from user import userVerify, User, get_user
+=======
+from flask import Flask, render_template, request, redirect, session, flash
+from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+import get_last_week
+from user import userVerify, User, get_user, create_user
+>>>>>>> 7fd12b4df010f16bec3217841413964d8bfc6554
 from databaseCURD import getDatabase, commitChangeToDatabase
 import json
 
@@ -42,12 +49,17 @@ def create_app(test_config=None):
 
     @app.route('/yukiyu/main')
     def main_page():
-        return render_template('main.html')
+        print('main_page func called')
+        userame = None
+        if hasattr(current_user, 'username'):
+            userame = current_user.username
+        print('current user: ', userame)
+        return render_template('main.html', user = userame)
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'GET':
-            return render_template('login.html')
+            return render_template('login.html', target = '/login', way = '登陆')
         if request.method == 'POST':
             user_name = request.form.get('username')
             password = request.form.get('password')
@@ -64,7 +76,8 @@ def create_app(test_config=None):
                     emsg = "密码有误"
 
             if emsg is None:
-                return render_template(request.args.get('next') or url_for('main_page'), user = current_user.username)
+                return redirect(request.args.get('next') or '/yukiyu/main')
+                # return render_template(request.args.get('next') or 'main.html', user = current_user.username)
             else:
                 flash(emsg)
                 return redirect('/login')
@@ -74,6 +87,23 @@ def create_app(test_config=None):
             # else:
             #     flash('用户不存在或密码错误')
             #     return redirect('/login')
+    
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if request.method == 'GET':
+            return render_template('login.html', target = '/register', way = '注册')
+        else:
+            user_name = request.form.get('username')
+            password = request.form.get('password')
+            create_user(user_name, password)
+            flash('创建用户成功，请登陆')
+            return redirect('/login')
+
+    
+    @app.route('/logout')
+    def logout():
+        logout_user()
+        return redirect('/yukiyu')
 
     @app.route('/yukiyu/database', methods=['GET', 'POST'])
     @login_required

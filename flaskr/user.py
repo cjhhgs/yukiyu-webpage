@@ -8,11 +8,13 @@ db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", pa
 users = [
     {
         'name': 'zlyang',
-        'password': generate_password_hash('200128yzl')
+        'password': generate_password_hash('200128yzl'),
+        'id': 1
     },
     {
         'name':'cjh',
-        'password': generate_password_hash('cjhghs')
+        'password': generate_password_hash('cjhghs'),
+        'id': 2
     }
 ]
 
@@ -48,7 +50,7 @@ class User(UserMixin):
     def __init__(self, user):
         self.username = user.get("name")
         self.password_hash = user.get("password")
-        self.id = user.get("name")
+        self.id = user.get("id")
 
     def verify_password(self, password):
         """密码验证"""
