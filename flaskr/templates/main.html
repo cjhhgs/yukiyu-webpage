@@ -59,6 +59,7 @@
                 <ul v-for="(pack, weekDay) in bangumiGet" v-show="weekDay==weekMark">
                     
                     <li v-for="(item, index) in pack.seasons">
+                        <span class="detail-info" @click="getDetailInfo(item)">详情</span>
                         <a :href="getPlayUrl(item, index)" class="pic" target="new"><img :src="item['img']" alt=""></a>
                         <div class="text">
                             <!-- TODO: overflow ... -->
