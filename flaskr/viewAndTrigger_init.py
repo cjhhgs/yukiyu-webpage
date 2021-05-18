@@ -12,9 +12,9 @@ def create_view_detail_info(db):
         """
     sql2 = """
         CREATE view detail_info as (
-        select name,company_name,conduct_name,img
+        select bangumi_id, name,company_name,conduct_name,img
         from (((bangumi_list natural join bangumi_company) natural join bangumi_conduct)
- 		natural join company) natural join conduct;
+ 		natural join company) natural join conduct
         )
         """
     try:
@@ -168,7 +168,7 @@ def create_func_ifexist(db):
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     create_view_detail_info(db) #create view
-    create_func_ifexist(db)
-    create_trigger_bangumi(db)  #create tigger， 需要手动创建
+    # create_func_ifexist(db)
+    # create_trigger_bangumi(db)  #create tigger， 需要手动创建
     db.close()
     

@@ -65,15 +65,21 @@ def getBangumiInfoList(html):
     return res[:-1]
 
 def getProduceInfo():
-    target_url = 'https://zh.moegirl.org.cn/%E6%97%A5%E6%9C%AC2021%E5%B9%B4%E5%86%AC%E5%AD%A3%E5%8A%A8%E7%94%BB'
-    html = url_open(target_url).decode('utf-8') 
+    # target_url = 'https://zh.moegirl.org.cn/%E6%97%A5%E6%9C%AC2021%E5%B9%B4%E6%98%A5%E5%AD%A3%E5%8A%A8%E7%94%BB'
+    # html = url_open(target_url).decode('utf-8') 
+    html = open('./flaskr/save.txt', encoding='utf-8').read()
     bangumiInfoList = getBangumiInfoList(html)
+    print('get bangumiDetailInfo:')
+    print(bangumiInfoList)
     return bangumiInfoList
 
 if __name__ == '__main__':
-    target_url = 'https://zh.moegirl.org.cn/%E6%97%A5%E6%9C%AC2021%E5%B9%B4%E5%86%AC%E5%AD%A3%E5%8A%A8%E7%94%BB'
-    html = url_open(target_url).decode('utf-8') 
+    # target_url = 'https://zh.moegirl.org.cn/%E6%97%A5%E6%9C%AC2021%E5%B9%B4%E5%86%AC%E5%AD%A3%E5%8A%A8%E7%94%BB'
+    # html = url_open(target_url).decode('utf-8') 
+    # print(html)
+    html = open('./flaskr/save.txt', encoding='utf-8').read()
     bangumiInfoList = getBangumiInfoList(html)
+    print('get bangumiDetailInfo:')
     print(bangumiInfoList)
     # print(bangumiInfoList)
     # f = open("out.html", "w", encoding='utf-8')  

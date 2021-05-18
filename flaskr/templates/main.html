@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>雪柚主页</title>
 
+    <link rel="stylesheet" href="../static/css/base.css">
+
+    <link rel="stylesheet" href="../static/css/common.css">
+
+    <link rel="stylesheet" href="../static/css/main.css">
+
     <!-- 初始化样式文件 -->
     <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
     <!-- 公共样式文件 -->
@@ -79,6 +85,21 @@
                     </li>
                 </ul>
             </div>
+            <!-- detail info page start -->
+            <div id="detail-background" v-show='showDetailFlag'>
+                <div id="detail-box">
+                    <h2 class="title">{{bangumiDetail['name']}}</h2>
+                    <img :src="bangumiDetail['img']" alt="bangumiImage">
+                    <h3>监督：{{bangumiDetail['conduct_name']}}</h3>
+                    <h3>制作公司：{{bangumiDetail['company_name']}}</h3>
+                    <h3>CAST：</h3>
+                    <ul>
+                        <li v-for="item in bangumiDetail['cast']">{{item}}</li>
+                    </ul>
+                    <div class="btn" @click='showDetailFlag=false'>关闭</div>
+                </div>
+            </div>
+            <!-- detail info page end -->
         </div>
         {% endraw %}
         <!-- bangumi end -->
@@ -93,7 +114,8 @@
     <!-- js 动画 -->
     <script src="{{url_for('static', filename='js/index.js')}}"></script>
     <!-- js 动态元素 -->
-    <script src="{{url_for('static', filename='js/index_dynamic.js')}}"></script>
+    <!-- <script src="{{url_for('static', filename='js/index_dynamic.js')}}"></script> -->
+    <script src="../static/js/index_dynamic.js"></script>
 
 </body>
 </html>

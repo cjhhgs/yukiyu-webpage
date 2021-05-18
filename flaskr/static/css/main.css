@@ -228,3 +228,41 @@ body {
     color: #79bce4;
     border-radius: 2px;
 }
+
+#detail-background{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, .6);
+    background-attachment: fixed;
+}
+
+#detail-box{
+    margin: 10vh 20vw;
+    /* height: 80vh; */
+    width: 60vw;
+    padding: 5vh 5vw;
+    overflow: auto;
+    background-color: #fff;
+    box-shadow: 0 6px 15px rgb(195 230 210);
+    border-radius: 10px;
+}
+#detail-box .title{
+    margin: 10px 0;
+}
+#detail-box img{
+    float: right;
+}
+#detail-box h3{
+    margin: 10px 0;
+}
+#detail-box ul li{
+    margin: 5px 0;
+}
+#detail-box .btn{
+    display: inline-block;
+    margin-left: calc(24vw - 75px);
+    background-color: #419664;
+}

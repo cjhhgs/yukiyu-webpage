@@ -3,6 +3,14 @@ import datetime
 
 # via veiw to get the detail info of a target bangumi
 def get_detail_info(id):
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    cursor = db.cursor()
+    sql = """
+        select * from detail_info
+        where bangumi_id = %d
+        """%id
+    cursor.execute(sql)
+    data = cursor.fetchall()
     return 'detail bangumi info get !'
 
 def get_list_of_date(day, target_table):
