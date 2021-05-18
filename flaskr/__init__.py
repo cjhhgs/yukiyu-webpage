@@ -1,15 +1,9 @@
 import os
-<<<<<<< HEAD
-from flask import Flask, render_template, request, redirect, session, flash, url_for
-from flask_login import LoginManager, login_user, current_user, login_required
-from get_last_week import get_last_week, get_detail_info
-from user import userVerify, User, get_user
-=======
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 import get_last_week
+from get_last_week import get_last_week, get_detail_info
 from user import userVerify, User, get_user, create_user
->>>>>>> 7fd12b4df010f16bec3217841413964d8bfc6554
 from databaseCURD import getDatabase, commitChangeToDatabase
 import json
 
