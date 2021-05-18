@@ -55,9 +55,9 @@ axios.get("http://106.15.77.207/bangumi")
                     var id = item.bangumi_id;
                     axios.get("http://106.15.77.207/bangumi?id="+id)
                         .then((response) => {
-                            var data = response.data;
+                            this.bangumiDetail = response.data.result;
                             console.log('get info from server:');
-                            console.log(data);
+                            console.log(this.bangumiDetail);
                             this.showDetailFlag = true
                         })
                 }

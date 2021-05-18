@@ -1,17 +1,39 @@
 import pymysql
 import datetime
+from databaseCURD import signColumnsShuffle
 
 # via veiw to get the detail info of a target bangumi
-def get_detail_info(id):
+def get_detail_info(id='4100450'):
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    print('get bangumi detail info: ')
     cursor = db.cursor()
     sql = """
         select * from detail_info
-        where bangumi_id = %d
+        where bangumi_id = %s
         """%id
     cursor.execute(sql)
     data = cursor.fetchall()
-    return 'detail bangumi info get !'
+    print(data)
+    sql = """
+        select actor from bangumi_cast
+        where bangumi_id = %s
+        """%id
+    cursor.execute(sql)
+    cast = cursor.fetchall()
+    cast = signColumnsShuffle(cast)
+    print(cast)
+    res = {'result': None}
+    if data and cast:
+        data = data[0]
+        res['result'] = {
+            'id':  data[0],
+            'name': data[1],
+            'company_name': data[2],
+            'conduct_name': data[3],
+            'img': data[4],
+            'cast': cast
+        }
+    return res
 
 def get_list_of_date(day, target_table):
     # date = day.strftime("%Y-%m-%d")
@@ -102,5 +124,6 @@ def get_last_week():
     return result
 
 if __name__=='__main__':
-    data = get_last_week()
-    # print(data)
+    # data = get_last_week()
+    data = get_detail_info()
+    print(data)

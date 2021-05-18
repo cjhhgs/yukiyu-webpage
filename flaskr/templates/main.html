@@ -88,14 +88,17 @@
             <!-- detail info page start -->
             <div id="detail-background" v-show='showDetailFlag'>
                 <div id="detail-box">
-                    <h2 class="title">{{bangumiDetail['name']}}</h2>
-                    <img :src="bangumiDetail['img']" alt="bangumiImage">
-                    <h3>监督：{{bangumiDetail['conduct_name']}}</h3>
-                    <h3>制作公司：{{bangumiDetail['company_name']}}</h3>
-                    <h3>CAST：</h3>
-                    <ul>
-                        <li v-for="item in bangumiDetail['cast']">{{item}}</li>
-                    </ul>
+                    <template v-if="bangumiDetail">
+                        <h2 class="title">{{bangumiDetail['name']}}</h2>
+                        <img :src="bangumiDetail['img']" alt="bangumiImage">
+                        <h3>监督：{{bangumiDetail['conduct_name']}}</h3>
+                        <h3>制作公司：{{bangumiDetail['company_name']}}</h3>
+                        <h3>CAST：</h3>
+                        <ul>
+                            <li v-for="item in bangumiDetail['cast']">{{item}}</li>
+                        </ul>
+                    </template>
+                    <h2 v-else>这部番没有详细信息，看看其他的吧</h2>
                     <div class="btn" @click='showDetailFlag=false'>关闭</div>
                 </div>
             </div>
