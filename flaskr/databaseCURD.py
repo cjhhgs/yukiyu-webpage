@@ -1,5 +1,6 @@
 import traceback
 import pymysql
+from userManage import commmitChangeToUserlist, privilegeOfUser, ifManage
 
 # db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
 global db
@@ -15,7 +16,18 @@ def checkValibleTableName(targetTable, user):
 # if oldInfo is None, call insert
 # if newInfo is None, call delete
 # else, call updata
+#
+# OK code: return 1
+# error code:
+# 0  : sql run time error
+# -1 : invalid target table
+# -2 : user is None
+# -3 : user has not target privilege
 def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
+    if user == None:
+        return -2
+    userPrivilege = privilegeOfUser(user).get('privilege')
+
     global db
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     if oldInfo == None and newInfo == None or not checkValibleTableName(targetTable, user):
@@ -25,12 +37,27 @@ def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
         print('targetTable:', targetTable)
         return -1
     returnStatus = 0
+    if targetTable == 'user_list':
+        if ifManage('user') == 'Y':
+            return commitChangeToDatabase(oldInfo, newInfo)
+        else:
+            return -3
+
     if oldInfo == None:
-        returnStatus = insertItem(newInfo, targetTable)
+        if userPrivilege[1] == 'Y':
+            returnStatus = insertItem(newInfo, targetTable)
+        else:
+            returnStatus = -3
     elif newInfo == None:
-        returnStatus = deleteItem(oldInfo, targetTable)
+        if userPrivilege[3] == 'Y':
+            returnStatus = deleteItem(oldInfo, targetTable)
+        else:
+            returnStatus = -3
     else:
-        returnStatus = updateItem(oldInfo, newInfo, targetTable)
+        if userPrivilege[1] == 'Y':
+            returnStatus = updateItem(oldInfo, newInfo, targetTable)
+        else:
+            returnStatus = -3
     return returnStatus
 
 # shuffle : ((a,),(b,),(c,)) --> (a, b, c)
@@ -118,12 +145,16 @@ def getDatabase(target, user):
     print('get url args:')
     print(target)
     res = {}
+    selectPriv = privilegeOfUser(user).get('privilege')[0]
     for key in target:
         if target[key] != 'tables':
             # 获取数据表中的表头
             res[target[key]+'Header'] = getTableHead(target[key])
             # 获取数据表中的所有数据
-            res[target[key]] = getTableData(target[key])
+            if selectPriv == 'Y':
+                res[target[key]] = getTableData(target[key])
+            else:
+                res[target[key]] = None
         else:
             # 获取数据库中的所有数据表名
             res['tableList'] = getTableNames(user)
@@ -261,4 +292,10 @@ def deleteItem(oldInfo, targetTable):
     db.close()
     return returnStatus
         
-        
+def getUserList():
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    cursor = db.cursor()
+    sql = 'select name, password, user_id from user_list'
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    return res        
