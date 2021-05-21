@@ -8,10 +8,7 @@ from itertools import chain
 
 #默认创建普通用户，授权select
 def createUser(name,password):
-<<<<<<< HEAD
     returnStatus=1
-=======
->>>>>>> upstream/master
     db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
     cursor = db.cursor()
     host = '%'
@@ -71,10 +68,7 @@ def createUser(name,password):
 
 #删除用户
 def dropUser(name):
-<<<<<<< HEAD
     returnStatus=1
-=======
->>>>>>> upstream/master
     db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
     cursor = db.cursor()
     host = '%'
@@ -743,7 +737,7 @@ def changePassword(name,password):
     except:
         print('updata error !')
         db.rollback()
-        traceback.print_exception()
+        traceback.print_exc()
         returnStatus = 0
 
     if(returnStatus==0):
@@ -774,43 +768,40 @@ def changePassword(name,password):
 
 def test1():
     
-    newInfo = ['N','xx','123456','YNNN']
+    newInfo = ['N',2,'xx','123456','YNNN']
     commmitChangeToUserlist(None,newInfo)
     print('success')
     return
 
 def test2():
-    oldInfo = ['N','xx','123456','YNNN']
-    newInfo = ['Y','xx','123456','YYYY']
+    oldInfo = ['N',2,'xx','123456','YNNN']
+    newInfo = ['Y',2,'xx','123456','YYYY']
     commmitChangeToUserlist(oldInfo,newInfo)
 
 def test3():
-    oldInfo = ['Y','xx','123456','YYYY']
-    newInfo = ['N','xx','123456','YNNN']
+    oldInfo = ['Y',2,'xx','123456','YYYY']
+    newInfo = ['N',2,'xx','123456','YNNN']
     commmitChangeToUserlist(oldInfo,newInfo)
 
 def test4():
-    oldInfo = ['N','xx','123456','YNNN']
+    oldInfo = ['N',2,'xx','123456','YNNN']
     commmitChangeToUserlist(oldInfo,None)
 
 def test5():
-    oldInfo = ['N','xx','123456','YNNN']
-    newInfo = ['N','xxyy','123456789','YNNN']
+    oldInfo = ['N',2,'xx','123456789','YNNN']
+    newInfo = ['Y',2,'xxyy','123456789','YYYY']
     commmitChangeToUserlist(oldInfo,newInfo)
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     #dropUser('xx')
     #test1()
     #test2()
-    #test3()
+    test3()
     #test4()
 
-    test5()
+    #test5()
     
-=======
->>>>>>> upstream/master
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     #dropUser('xxx')
     #createUser('xxx','123456')
