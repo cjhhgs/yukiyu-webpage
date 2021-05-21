@@ -23,9 +23,16 @@ axios.get("http://106.15.77.207/bangumi")
                 showMark: -1,
                 weeks: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
                 weekMark: (now.getDay() + 6) % 7,
-                bangumiGet:response.data.result
-                // bangumiGet:[{'name':'五等分的新娘', 'play_url': {'bili': 'https://www.bilibili.com/bangumi/play/ss36166/?spm_id_from=333.851.b_62696c695f7265706f72745f616e696d65.34', '樱花':'#'},
-                // 'episode': '第12话', 'img': '../static/upload/五等分.webp'}]
+                bangumiGet:response.data.result,
+                showDetailFlag: false,
+                bangumiDetail: {
+                    // name,company_name,conduct_name,img
+                    name: '这爱情有点奇怪',
+                    img: '../static/upload/default.webp',
+                    company_name: 'company company company',
+                    conduct_name: 'conduct',
+                    cast:['aaaa', 'bbbb', 'cccc', 'dddd', 'eeeeeee', 'fff', 'ggggggggggggg', 'hhh']
+                }
             },
             methods: {
                 getPlayUrl: function (item, index) {
@@ -48,9 +55,10 @@ axios.get("http://106.15.77.207/bangumi")
                     var id = item.bangumi_id;
                     axios.get("http://106.15.77.207/bangumi?id="+id)
                         .then((response) => {
-                            var data = response.data;
+                            this.bangumiDetail = response.data.result;
                             console.log('get info from server:');
-                            console.log(data);
+                            console.log(this.bangumiDetail);
+                            this.showDetailFlag = true
                         })
                 }
             }

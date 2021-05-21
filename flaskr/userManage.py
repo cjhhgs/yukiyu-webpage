@@ -8,7 +8,10 @@ from itertools import chain
 
 #默认创建普通用户，授权select
 def createUser(name,password):
+<<<<<<< HEAD
     returnStatus=1
+=======
+>>>>>>> upstream/master
     db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
     cursor = db.cursor()
     host = '%'
@@ -68,7 +71,10 @@ def createUser(name,password):
 
 #删除用户
 def dropUser(name):
+<<<<<<< HEAD
     returnStatus=1
+=======
+>>>>>>> upstream/master
     db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
     cursor = db.cursor()
     host = '%'
@@ -794,6 +800,7 @@ def test5():
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     #dropUser('xx')
     #test1()
     #test2()
@@ -802,6 +809,8 @@ if __name__ == '__main__':
 
     test5()
     
+=======
+>>>>>>> upstream/master
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     #dropUser('xxx')
     #createUser('xxx','123456')
