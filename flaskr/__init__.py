@@ -105,14 +105,14 @@ def create_app(test_config=None):
         if request.method == 'GET':
             agrs = request.args
             if agrs:
-                res = getDatabase(agrs, current_user.username)
+                res = getDatabase(agrs, getattr(current_user, 'username', None))
                 return res
             return render_template('database.html')
         else:           
             res = json.loads(request.data)
             print('get data:')
             print(res)
-            returnStatus = commitChangeToDatabase(res['oldInfo'], res['newInfo'], res['tableName'])
+            returnStatus = commitChangeToDatabase(res['oldInfo'], res['newInfo'], res['tableName'], getattr(current_user, 'username', None))
             return 'return status: ' + str(returnStatus)
 
 
