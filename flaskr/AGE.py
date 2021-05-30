@@ -56,8 +56,10 @@ def get_AGE_info(need_img = True):
     return bangumi
 
 if __name__ == '__main__':
-    target_url = 'https://www.agefans.net/'
+    target_url = 'https://agefans.org/'
     html = url_open(target_url).decode('utf-8')
-    bangumi_list = get_bangumi_list(html)
-    bangumi = get_today_bangumi(bangumi_list)
-    print(bangumi)
+    # bangumi_list = get_bangumi_list(html)
+    # bangumi = get_today_bangumi(bangumi_list)
+    f = open("age.html", 'w', encoding='utf-8')
+    f.write(html)
+    print(html)
