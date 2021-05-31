@@ -31,6 +31,7 @@ def createUser(name,password):
         print(sql11)
         cursor.execute(sql1)
         cursor.execute(sql11)
+        db.commit()
         print('create success !')
     except:
         print('create user error!')
@@ -43,8 +44,8 @@ def createUser(name,password):
     #在yukiyu库中的user插入同样
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     cursor=db.cursor()
-    data = privilegeOfUser(name)
-    priv = data['privilege']
+    # data = privilegeOfUser(name)
+    priv = 'YNNN'
     sql2 = """
     insert into user_list(name,password,privilege) 
     values

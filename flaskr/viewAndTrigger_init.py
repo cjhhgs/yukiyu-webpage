@@ -162,13 +162,15 @@ def create_func_ifexist(db):
     except:
         print('create error!')
         traceback.print_exc()
-    
 
+
+    
 
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
     create_view_detail_info(db) #create view
     # create_func_ifexist(db)
     # create_trigger_bangumi(db)  #create tigger， 需要手动创建
+
     db.close()
     

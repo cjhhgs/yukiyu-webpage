@@ -28,12 +28,12 @@ def create_user(user_name, password):
     #     "id": uuid.uuid4()
     # }
     # users.append(user)
-    return create_user(user_name, password)
+    return createUser(user_name, password)
 
 def get_user(user_name):
     """根据用户名获得用户记录"""
     for user in getUserList():
-        if user[0] == str(user_name) or user[2] == int(user_name):
+        if user[0] == str(user_name):
             return {
                 "name": user[0],
                 "password": user[1],
@@ -41,7 +41,15 @@ def get_user(user_name):
             }
     return None
 
-
+def get_user_by_id(id):
+    for user in getUserList():
+        if user[2] == int(id):
+            return {
+                "name": user[0],
+                "password": user[1],
+                "id": user[2],
+            }
+    return None
 
 class User(UserMixin):
     """用户类"""
@@ -65,7 +73,7 @@ class User(UserMixin):
         """根据用户ID获取用户实体，为 login_user 方法提供支持"""
         if not user_id:
             return None
-        user = get_user(user_id)
+        user = get_user_by_id(user_id)
 
         if user != None:
             return User(user)
