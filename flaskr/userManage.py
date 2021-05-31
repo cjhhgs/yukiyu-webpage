@@ -9,7 +9,7 @@ from itertools import chain
 #默认创建普通用户，授权select
 def createUser(name,password):
     returnStatus=1
-    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="root", password="123456",charset='utf8')
     cursor = db.cursor()
     host = '%'
     sql1 = "create user '%s'@'%s' identified by '%s';"%\
@@ -42,7 +42,7 @@ def createUser(name,password):
 
 
     #在yukiyu库中的user插入同样
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
     cursor=db.cursor()
     # data = privilegeOfUser(name)
     priv = 'YNNN'
@@ -70,7 +70,7 @@ def createUser(name,password):
 #删除用户
 def dropUser(name):
     returnStatus=1
-    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="root", password="123456",charset='utf8')
     cursor = db.cursor()
     host = '%'
     sql="drop user '%s'@'%s';"%\
@@ -113,7 +113,7 @@ def dropUser(name):
 
 
 def ifManage(name):
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu",user="root", password="123456", charset="utf8")
     sql = """
         select if_manager 
         from user_list
@@ -127,6 +127,7 @@ def ifManage(name):
         cursor.execute(sql)
         data = cursor.fetchall()
         print('success !')
+        print(data)
     except:
         print('error!')
         traceback.print_exc()
@@ -141,7 +142,7 @@ def grantSuperUser(name):
         return 1
 
     host='%'
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor = db.cursor()
     sql="""
     grant all privileges on yukiyu.* to '%s'@'%s';
@@ -212,7 +213,7 @@ def grantOrdinartUser(name):
     
 
     host = '%'
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor = db.cursor()
     sql1="revoke all privileges on yukiyu.* from '%s'@'%s';"%\
     (name,host)
@@ -279,7 +280,7 @@ def grantOrdinartUser(name):
 # 查看指定权限
 def checkOnePriv(name, privilege):
     s = privilege+'_priv'
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor=db.cursor(pymysql.cursors.DictCursor)
     sql = """
         select %s_priv
@@ -311,7 +312,7 @@ def addPrivForUser(name,privilege):
 
 
     host='%'
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor = db.cursor()
     sql1 = "grant %s on yukiyu.* to '%s'@'%s';"%\
         (privilege,name,host)
@@ -355,7 +356,7 @@ def delPrivForUser(name,privilege):
         return 1
 
     host='%'
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor = db.cursor()
     sql1 = "revoke %s on yukiyu.* from '%s'@'%s';"%\
         (privilege,name,host)
@@ -393,7 +394,7 @@ def delPrivForUser(name,privilege):
 
 #查询指定用户权限
 def privilegeOfUser(name):
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor=db.cursor(pymysql.cursors.DictCursor)
     sql = """
         select User, select_priv, insert_priv, update_priv, delete_priv, create_priv, drop_priv
@@ -428,7 +429,7 @@ def privilegeOfUser(name):
 
 #查看所有用户及权限
 def privilegeOfAllUser():
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor=db.cursor(pymysql.cursors.DictCursor)
 
     sql = """
@@ -462,7 +463,7 @@ def privilegeOfAllUser():
     return list
 
 def printAllUser():
-    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="mysql",user="root", password="123456", charset="utf8")
     cursor=db.cursor(pymysql.cursors.DictCursor)
     sql = "select if_manager, user_id, name, privilege  from yukiyu.user_list;"
     try:
@@ -478,7 +479,7 @@ def printAllUser():
 
 #返回用户密码hash值
 def getPassword(name):
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu",user="jhchen", password="123456", charset="utf8")
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu",user="root", password="123456", charset="utf8")
     cursor=db.cursor(pymysql.cursors.DictCursor)
     sql = "select password from yukiyu.user_list where name = '%s'"%\
         (name)
@@ -528,7 +529,7 @@ def changePrivilege(name,priv):
 # info中的password为明文密码
 # info = ['Y',id,'name','password','priv']
 def commmitChangeToUserlist(oldInfo, newInfo):
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
     if checkValible(newInfo)==0:
         print('newInfo error')
         return -1
@@ -664,7 +665,7 @@ def updateItem(newInfo, oldInfo):
 
 #用户改姓名
 def changeName(oname,nname):
-    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="root", password="123456",charset='utf8')
     cursor=db.cursor()
 
     sql1 = """
@@ -709,7 +710,7 @@ def changeName(oname,nname):
 
 # 用户改管理权限
 def changeIfManage(name,nIfMnage):
-    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="root", password="123456",charset='utf8')
     cursor=db.cursor()
 
     if(nIfMnage=='Y'):
@@ -722,7 +723,7 @@ def changeIfManage(name,nIfMnage):
 
 #用户改密码
 def changePassword(name,password):
-    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="mysql", user="root", password="123456",charset='utf8')
     cursor = db.cursor()
 
     sql = "ALTER USER '%s'@'%s' IDENTIFIED WITH mysql_native_password BY '%s';"%\
@@ -803,7 +804,7 @@ if __name__ == '__main__':
 
     #test5()
     
-    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
     #dropUser('xxx')
     #createUser('xxx','123456')
     #grantSuperUser('cy')

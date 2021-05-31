@@ -38,7 +38,7 @@ def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
         return -1
     returnStatus = 0
     if targetTable == 'user_list':
-        if ifManage('user') == 'Y':
+        if ifManage(user) == 'Y':
             return commmitChangeToUserlist(oldInfo, newInfo)
         else:
             return -3
