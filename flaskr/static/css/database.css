@@ -104,8 +104,9 @@ body {
     width: 30px;
 }
 
+
 #modify-background{
-    /* display: none; */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -117,7 +118,7 @@ body {
 .modify-box{
     position: relative;
     width: 1000px;
-    /* height: 60vh; */
+    /* max-height: 80vh; */
     top: 20%;
     left: calc(50% - 500px);
     padding: 40px 0;

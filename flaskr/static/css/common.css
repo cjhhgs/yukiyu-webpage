@@ -36,3 +36,6 @@
     transition: all .3s;
     cursor: pointer;
 }
+[v-cloak] {
+    display: none;
+}
