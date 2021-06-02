@@ -1,3 +1,7 @@
+# 萌娘百科爬虫模块
+# 爬取番剧的详细信息
+# 包括制作公司、监督、声优等
+
 from time import sleep
 import urllib.request
 import re

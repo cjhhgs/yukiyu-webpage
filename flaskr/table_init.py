@@ -1,3 +1,6 @@
+# 所有的表的初始化创建语句
+# 可调用该模块进行表的初始化
+
 import pymysql
 import traceback
 
@@ -183,12 +186,6 @@ def create_table_user(db):
         traceback.print_exc()
     
 
-# def create_view_bangumi_cast(db):
-#     cursor=db.cursor()
-#     view_name = "bangumi_cast"
-#     sql="CREATE view %s\
-#         (bangumi_id, name, episode, company)
-#         "
 
 # 构造与制作相关的表
 def initProduceTbale(db):

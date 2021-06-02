@@ -1,8 +1,12 @@
+# 该模块提供了一个数据库的通用CURD接口
+# 通过该接口能够快速进行数据库的增删查改功能
+# 该模块还提供了获取数据库所有表表名，各表表头的接口
+
 import traceback
 import pymysql
 from userManage import commmitChangeToUserlist, privilegeOfUser, ifManage
 
-# db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+
 global db
 
 # TODO: improve the robustness
@@ -123,8 +127,6 @@ def getTableNames(user):
     sql = "select table_name from information_schema.tables as tb where tb.table_schema = 'yukiyu'"
     cursor.execute(sql)
     res = cursor.fetchall()
-    # print('fetch res :')
-    # print(res)
     res = signColumnsShuffle(res)
     print('success ! \nget result: ')
     print(res)
@@ -132,7 +134,6 @@ def getTableNames(user):
     # 非超级用户不允许查看user列表
     if user not in getSuperUser():
         res.remove('user_list')
-    # res = ['bangumi_list', 'bilibili', 'acfun', 'AGE', 'company', 'conduct', 'bangumi_conduct', 'bangumi_company', 'bangumi_cast']
     # 将主表放在最前面
     res.remove('bangumi_list')
     res.insert(0, 'bangumi_list')
@@ -160,18 +161,6 @@ def getDatabase(target, user):
             res['tableList'] = getTableNames(user)
     return res
 
-# return the string: key1=value1 seperate key2=valuue2...
-# def getKeyValueString(name, data, seperate=','):
-#     res = ''
-#     length = len(name)
-#     for i in range(length):
-#         if isinstance(data[i], str):
-#             res += (name[i] + '=' + "'" + data[i] + "'")
-#         else:
-#             res += (name[i] + '=' + data[i])
-#         if i != length - 1:
-#             res += seperate
-#     return res
 
 # return the string: key1=value1 seperate key2=valuue2...
 def getKeyValueString(name, data, seperate=','):
@@ -184,25 +173,10 @@ def getKeyValueString(name, data, seperate=','):
             res += seperate
     return res
 
-# # return the string: value1 seperate value2...
-# # if strlization is True, when the data[i] is str, the value will be: 'value'
-# def getValueString(data, seperate=',', strlization = False):
-#     res = ''
-#     strlize = ''
-#     if strlization == True:
-#         strlize = "'"
-#     length = len(data)
-#     for i in range(length):
-#         if isinstance(data[i], str):
-#             res += (strlize + data[i] + strlize)
-#         else:
-#             res += data[i]
-#         if i != length - 1:
-#             res += seperate
-#     return res
 
-# # return the string: value1 seperate value2...
-# # if strlization is True, when the data[i] is str, the value will be: 'value'
+
+# return the string: value1 seperate value2...
+# if strlization is True, when the data[i] is str, the value will be: 'value'
 def getValueString(data, seperate=',', strlization = False):
     seperate = ' ' + seperate + ' '
     res = ''

@@ -1,3 +1,7 @@
+# 获取数据库中最近一周的番剧信息接口
+# 该模块提供了返回最近一周番剧信息的函数
+# 为前端数据展示API提供调用
+
 import pymysql
 import datetime
 from databaseCURD import signColumnsShuffle

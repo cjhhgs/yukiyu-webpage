@@ -1,4 +1,9 @@
-#from flaskr.databaseCURD import checkValibleTableName
+# 该模块是用户管理模块
+# 主要提供数据库中的用户管理功能
+# 实现在数据库中进行用户创建、授权、修改、删除等具体操作
+# 该模块实现的功能供user模块封装调用
+
+
 import pymysql
 import traceback
 from pymysql import cursors

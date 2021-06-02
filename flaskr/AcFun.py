@@ -1,3 +1,6 @@
+# A站的爬虫模块
+# 从A站中爬取新番数据
+
 from time import sleep
 import urllib.request
 import os

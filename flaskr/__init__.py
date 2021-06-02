@@ -1,3 +1,6 @@
+# 该模块是服务器模块
+# 该模块基于flask框架，搭建了数据库展示前端的WEB服务
+
 import os
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
@@ -11,10 +14,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.secret_key = 'div'
-    # app.config.from_mapping(
-    #     SECRET_KEY='dev',
-    #     DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-    # )
+
     login_manager = LoginManager()  # 实例化登录管理对象
     login_manager.init_app(app)  # 初始化应用
     login_manager.login_view = 'login'  # 设置用户登录视图函数 endpoint
@@ -65,22 +65,16 @@ def create_app(test_config=None):
                 user = User(user_info)
                 if user.verify_password(password):  # 校验密码
                     login_user(user)  # 创建用户 Session
-                    # return redirect(request.args.get('next') or url_for('main_page'))
                 else:
                     emsg = "密码有误"
 
             if emsg is None:
                 return redirect(request.args.get('next') or '/yukiyu/main')
-                # return render_template(request.args.get('next') or 'main.html', user = current_user.username)
+ 
             else:
                 flash(emsg)
                 return redirect('/login')
-            # if userVerify(request.form.get('username'), request.form.get('password')):              
-            #     session['user'] = (request.form.get('username'), request.form.get('password'))
-            #     return render_template('main.html', user = session['user'])
-            # else:
-            #     flash('用户不存在或密码错误')
-            #     return redirect('/login')
+
     
     @app.route('/register', methods=['GET', 'POST'])
     def register():
@@ -122,20 +116,11 @@ def create_app(test_config=None):
         agrs = request.args
         bangumi = None
         if agrs:
-            # print('get agrs from client: ')
-            # print(agrs)
-            # print(agrs.get('id'))
             bangumi = get_detail_info(agrs.get('id'))
         else:
             bangumi = get_last_week()
         return bangumi
 
-    # @app.route('/lastweek')
-    # def get_last_week_info():
-    #     last_week = get_last_week.get_last_week()
-    #     return last_week
-
-    # @app.route('/login', methods=['POST'])
 
 
     return app

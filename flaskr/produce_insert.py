@@ -1,3 +1,6 @@
+# 番剧的详细信息存储模块
+# 获取moegirl爬虫爬取的数据，存储到数据库中
+
 import moegirl
 import pymysql
 import merge_info

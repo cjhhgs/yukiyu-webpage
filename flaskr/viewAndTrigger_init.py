@@ -1,10 +1,12 @@
-# select distinct name, company_name, conduct_name, img
-# from (((bangumi_list natural join bangumi_company) natural join bangumi_conduct)
-# 		natural join company) natural join conduct;
+# 视图、函数、触发器的初始化模块
+
 
 import pymysql
 import traceback
 
+# 作者：杨智麟
+# 该视图为用户的番剧的详情信息查询提供便利
+# 提供番剧的id,名称，制作公司，头图的信息
 def create_view_detail_info(db):
     cursor=db.cursor()
     sql1="""

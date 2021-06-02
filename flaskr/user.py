@@ -1,3 +1,8 @@
+# 为flask_login功能提供支持的模块
+# 该模块封装了userManage中的部分函数
+# 该模块实现了flask用户登录中必要的功能
+
+
 import pymysql
 import uuid
 from werkzeug.security import generate_password_hash
@@ -7,27 +12,10 @@ from databaseCURD import getUserList
 from userManage import createUser
 
 db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
-users = [
-    {
-        'name': 'zlyang',
-        'password': generate_password_hash('200128yzl'),
-        'id': 1
-    },
-    {
-        'name':'cjh',
-        'password': generate_password_hash('cjhghs'),
-        'id': 2
-    }
-]
+
 
 def create_user(user_name, password):
     """创建一个用户"""
-    # user = {
-    #     "name": user_name,
-    #     "password": generate_password_hash(password),
-    #     "id": uuid.uuid4()
-    # }
-    # users.append(user)
     return createUser(user_name, password)
 
 def get_user(user_name):
@@ -42,6 +30,7 @@ def get_user(user_name):
     return None
 
 def get_user_by_id(id):
+    """根据用户ID获得用户记录"""
     for user in getUserList():
         if user[2] == int(id):
             return {
