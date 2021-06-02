@@ -4,7 +4,6 @@ body {
     background-size:100% auto;
     background-attachment: fixed;
 }
-
 #main-page {
     /* display: none;
     opacity: 0; */
@@ -231,6 +230,7 @@ body {
 }
 
 #detail-background{
+    /* display: none; */
     position: fixed;
     top: 0;
     left: 0;
@@ -241,8 +241,9 @@ body {
 }
 
 #detail-box{
+    /* display: none; */
     margin: 10vh 20vw;
-    /* height: 80vh; */
+    max-height: 85vh;
     width: 60vw;
     padding: 5vh 5vw;
     overflow: auto;

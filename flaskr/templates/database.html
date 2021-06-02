@@ -35,7 +35,7 @@
         <!-- header end -->
         <!-- database start -->
         {% raw %}
-        <div id="database" class="w box_style">
+        <div id="database" class="w box_style" v-cloak>
             <header class="storey-title">
                 <h2>雪柚数据库</h2>
                 <div id="database-choose">
@@ -54,7 +54,7 @@
                     </li>
                 </ul>
                 <!-- modify page start -->
-                <div id="modify-background" v-if="modifyDisplayFlag">
+                <div id="modify-background" v-show="modifyDisplayFlag">
                     <div class="modify-box">
                         <div class="modify-inner-box">
                             <ul>

@@ -149,8 +149,13 @@ def insert_new(db, bangumi_dict):
                 print('query error!')
                 traceback.print_exc()
                       
-                
-           
+
+def insert_bangumi(db):
+    print('start to get bangumi')
+    bangumi_dict = merge_info.merge_info(False)
+    print(bangumi_dict)
+    # bangumi_dict = {'season':[{'name':'测试中文','img':'测试中文bbb.jpg'}]}
+    insert_new(db,bangumi_dict) 
 
 
 if __name__ == '__main__':

@@ -3,6 +3,9 @@
 
 import pymysql
 import traceback
+from viewAndTrigger_init import create_view_detail_info
+from db_bangumi_insert import insert_bangumi
+from dbBangumiInfoInsert import insert_bangumi_info
 
 #bangumi_list总表
 def create_table_bangumi_list(db):
@@ -202,5 +205,8 @@ if __name__ == '__main__':
     create_table_bangumi(db,"acfun")
     initProduceTbale(db)
     create_table_user(db)
+    create_view_detail_info(db)
+    insert_bangumi()
+    insert_bangumi_info(db)
     db.close()
     

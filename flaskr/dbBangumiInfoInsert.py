@@ -87,6 +87,9 @@ def insertInfo(bangumiInfoList, db):
             insertCast(item, bangumiInfoList[index]['cast'], db)
 
 
+def insert_bangumi_info(db):
+    bangumiInfoList = getProduceInfo()
+    insertInfo(bangumiInfoList, db)
 
 
 if __name__ == '__main__':

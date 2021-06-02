@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>雪柚主页</title>
 
-    <link rel="stylesheet" href="../static/css/base.css">
+    <!-- <link rel="stylesheet" href="../static/css/base.css">
 
     <link rel="stylesheet" href="../static/css/common.css">
 
-    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/main.css"> -->
 
     <!-- 初始化样式文件 -->
     <link rel="stylesheet" href="{{url_for('static', filename='css/base.css')}}">
@@ -52,7 +52,7 @@
         </aside>
         <!-- bangumi start -->
         {% raw %}
-        <div id="bangumi" class="w box_style">
+        <div id="bangumi" class="w box_style" v-cloak>
             <header class="storey-title">
                 <h2>番剧</h2>
                 <div id="week-choose">
