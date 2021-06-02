@@ -200,13 +200,13 @@ def initProduceTbale(db):
 
 if __name__ == '__main__':
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
-    create_table_bangumi_list(db)
-    create_table_bangumi(db,'bilibili')
-    create_table_bangumi(db,"acfun")
-    initProduceTbale(db)
-    create_table_user(db)
-    create_view_detail_info(db)
-    insert_bangumi()
+    # create_table_bangumi_list(db)
+    # create_table_bangumi(db,'bilibili')
+    # create_table_bangumi(db,"acfun")
+    # initProduceTbale(db)
+    # create_table_user(db)
+    # create_view_detail_info(db)
+    insert_bangumi(db)
     insert_bangumi_info(db)
     db.close()
     

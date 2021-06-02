@@ -3,7 +3,17 @@
 import pymysql
 import traceback
 
-#bangumi_company存储过程
+
+# 存储过程
+# 作者： 陈家豪
+# 存储过程作用：
+# insertIntoCompany: 输入动漫id, 名称, 公司名称， 可以将相应信息存储到company、bangumi_company表中
+#                    过程： 先判断公司名是否是表中没有的公司，若是则将公司信息插入到company表
+#                           再判断bangumi_id是否未录入bangumi_company表中，若未录入，则插入这条信息
+# insertIntoConduct: 功能和insertIntoCompany相似
+# 由于pymysql模块语法兼容问题，无法通过以下python函数创建存储过程。需通过dbinit.sql脚本创建。
+
+#insertIntoCompany存储过程
 def createStoreProcedureBCompany(db):
     cursor=db.cursor()
     sql="""
@@ -46,7 +56,7 @@ def createStoreProcedureBCompany(db):
         traceback.print_exc()
 
 
-#bangumi_conduct存储过程
+#insertIntoConduct存储过程
 def createStoreProcedureBConduct(db):
     cursor=db.cursor()
     sql="""
