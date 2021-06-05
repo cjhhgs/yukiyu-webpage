@@ -27,6 +27,8 @@ def checkValibleTableName(targetTable, user):
 # -1 : invalid target table
 # -2 : user is None
 # -3 : user has not target privilege
+# -4 : manager's privilege is not 'YYYY' 
+# -5 : user name chongfu
 def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
     if user == None:
         return -2
