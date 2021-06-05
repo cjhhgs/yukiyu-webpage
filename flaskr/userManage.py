@@ -25,10 +25,11 @@ def createUser(name,password):
     cursor.execute("select user from db")
     elems = cursor.fetchall()
     res = list(chain.from_iterable(elems))
+    print('现有用户：')
     print(res)
     if name in res:
         print("用户%s已存在"/(name))
-        return 0
+        return -5
 
     try:
         print('start to execute:')
@@ -39,10 +40,11 @@ def createUser(name,password):
         db.commit()
         print('create success !')
     except:
+        returnStatus=0
         print('create user error!')
         db.rollback()
         traceback.print_exc()
-        returnStatus=0
+        
     db.close()
 
 
@@ -153,9 +155,15 @@ def grantSuperUser(name):
     grant all privileges on yukiyu.* to '%s'@'%s';
     """%\
     (name,host)
+    sql2="""
+    grant all privileges on *.* to '%s'@'%s';
+    """%\
+    (name,host)
     try:
         print('start to execute:')
         print(sql)
+        cursor.execute(sql2)
+        db.commit()
         cursor.execute(sql)
         db.commit()
         print('grant success !')
@@ -212,6 +220,7 @@ def grantSuperUser(name):
 #授权为普通用户，select权限
 def grantOrdinartUser(name):
 
+    returnStatus=1
     if(ifManage(name)=='N'):
         print("grant success")
         return 1
@@ -276,10 +285,11 @@ def grantOrdinartUser(name):
         traceback.print_exc()
         return 0
 
-    #changePrivilege(name, 'YYYY')
+    changePrivilege(name, 'YYYY')
     
     cursor.close()
     db.close()
+    return returnStatus
 
 
 # 查看指定权限
@@ -517,16 +527,17 @@ def changePrivilege(name,priv):
         delPrivForUser(name,'insert')
     
     if priv[2]=='Y':
-        addPrivForUser(name,'delete')
-    else:
-        delPrivForUser(name,'delete')
-
-    if priv[3]=='Y':
         addPrivForUser(name,'update')
     else:
         delPrivForUser(name,'update')
+
+    if priv[3]=='Y':
+        addPrivForUser(name,'delete')
+    else:
+        delPrivForUser(name,'delete')
     
     return 1
+
 
 
 
@@ -535,10 +546,14 @@ def changePrivilege(name,priv):
 # info = ['Y',id,'name','password','priv']
 def commmitChangeToUserlist(oldInfo, newInfo):
     db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="root", password="123456",charset='utf8')
-    if checkValible(newInfo)==0:
-        print('newInfo error')
-        return -1
     
+    if oldInfo != None and newInfo != None:
+        if oldInfo[0]=='N' and newInfo[0]=='Y':
+            newInfo[4]='YYYY'
+        if oldInfo[0]=='Y'and newInfo[0]=='Y' and newInfo[4]!='YYYY':
+            print('privilege error')
+            return -4
+        
 
     sql1 = "savepoint x;"
     cursor=db.cursor()
@@ -555,7 +570,7 @@ def commmitChangeToUserlist(oldInfo, newInfo):
         print('update')
         returnStatus = updateItem(newInfo, oldInfo)
     
-    if(returnStatus==0):
+    if(returnStatus!=1):
         print('error')
         sql2 = "rollback to x;"
         cursor.execute(sql2)
@@ -570,18 +585,7 @@ def commmitChangeToUserlist(oldInfo, newInfo):
     return returnStatus
 
 
-def checkValible(info):
-    if info==None:
-        return 1
-    ifManage = info[0]
-    name = info[2]
-    password = info[3]
-    privilege = info[4]
-    if ifManage=='Y' and privilege != 'YYYY':
-        print('privilege error!')
-        return 0
-    
-    return 1
+
 
 #插入新用户
 def insertItem(newInfo):
@@ -592,20 +596,20 @@ def insertItem(newInfo):
     privilege = newInfo[4]
 
     status = createUser(name,password)
-    if(status==0):
-        return 0
+    if(status!=1):
+        return status
 
     if(ifManage=='Y'):
         status= grantSuperUser(name)
     else:
         status = grantOrdinartUser(name)
     
-    if status==0:
-        return 0
+    if status!=1:
+        return status
 
     status = changePrivilege(name,privilege)
-    if status==0:
-        return 0
+    if status!=1:
+        return status
     
     print('insert item success')
     return 1
@@ -641,27 +645,27 @@ def updateItem(newInfo, oldInfo):
     
     if(npriv != opriv):
         returnStatus = changePrivilege(oname,npriv)
-        if returnStatus == 0:
+        if returnStatus != 1:
             print('change privilege error')
-            return 0
+            return returnStatus
         print('change privilege success')
     if(nifManage!=oifManage):
         returnStatus = changeIfManage(oname,nifManage)
-        if returnStatus == 0:
+        if returnStatus != 1:
             print('change ifManager error')
-            return 0
+            return returnStatus
         print('change ifManager success')
     if(npassword!=opassword):
         returnStatus = changePassword(oname,npassword)
-        if returnStatus == 0:
+        if returnStatus != 1:
             print('change password error')
-            return 0
+            return returnStatus
         print('change password success')
     if(oname != nname):
         returnStatus = changeName(oname,nname)
-        if returnStatus == 0:
+        if returnStatus != 1:
             print('change name error')
-            return 0
+            return returnStatus
         print('change name success')
 
     print('update item success')
@@ -670,10 +674,25 @@ def updateItem(newInfo, oldInfo):
 
 #用户改姓名
 def changeName(oname,nname):
+    returnStatus = 1
     db = pymysql.connect(host="localhost", port=3306, db="mysql", user="root", password="123456",charset='utf8')
     cursor=db.cursor()
 
+    cursor.execute("select user from db")
+    elems = cursor.fetchall()
+    res = list(chain.from_iterable(elems))
+    print('现有用户：')
+    print(res)
+    if nname in res:
+        print("用户%s已存在"/(nname))
+        return -5
+
     sql1 = """
+    update db 
+    set user='%s' 
+    where user = '%s';"""%\
+        (nname, oname)
+    sql11 = """
     update user 
     set user='%s' 
     where user = '%s';"""%\
@@ -681,7 +700,9 @@ def changeName(oname,nname):
     try:
         print('start to execute:')
         print(sql1)
+        print(sql11)
         cursor.execute(sql1)
+        cursor.execute(sql11)
         db.commit()
         print('success !')
         returnStatus = 1
@@ -775,19 +796,19 @@ def changePassword(name,password):
 
 def test1():
     
-    newInfo = ['N',2,'xx','123456','YNNN']
+    newInfo = ['N',2,'ddd','123456','YNNN']
     commmitChangeToUserlist(None,newInfo)
     print('success')
     return
 
 def test2():
-    oldInfo = ['N',2,'xx','123456','YNNN']
-    newInfo = ['Y',2,'xx','123456','YYYY']
+    oldInfo = ['N',2,'ddd','123456','YNNN']
+    newInfo = ['Y',2,'ddd','123456','YNNN']
     commmitChangeToUserlist(oldInfo,newInfo)
 
 def test3():
-    oldInfo = ['Y',2,'xx','123456','YYYY']
-    newInfo = ['N',2,'xx','123456','YNNN']
+    oldInfo = ['Y',2,'ddd','123456','YYYY']
+    newInfo = ['Y',2,'xx','123456','YYYY']
     commmitChangeToUserlist(oldInfo,newInfo)
 
 def test4():
@@ -801,7 +822,7 @@ def test5():
 
 
 if __name__ == '__main__':
-    #dropUser('xx')
+    #dropUser('xxy')
     #test1()
     #test2()
     test3()
