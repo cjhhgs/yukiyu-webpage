@@ -104,16 +104,6 @@ def get_last_week():
     bangumi_list = get_target_week('acfun')
     # insert acfun into bilibili
     merge_list(result['result'], bangumi_list, 'acfun')
-    # for i in result['result']:
-    #     for j in bangumi_list:
-    #         if i['date']==j['date']:
-    #             # print('\n\n\n')
-    #             # print('merge left:')
-    #             # print(i['seasons'])
-    #             # print('\n')
-    #             # print('merge right')
-    #             # print(j['seasons'])
-    #             merge_seasons(i['seasons'], j['seasons'], 'acfun')
     print('acfun result')
     print(bangumi_list)
 

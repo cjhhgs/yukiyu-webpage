@@ -83,6 +83,7 @@ body {
 .list-box .add{
     float: right;
     margin-right: -5px;
+    cursor: pointer;
 }
 .list-box>ul>li{
     width: 95%;
@@ -102,11 +103,12 @@ body {
 .list-box>ul>li .delete{
     float: right;
     width: 30px;
+    cursor: pointer;
 }
 
 
 #modify-background{
-    display: none;
+    /* display: none; */
     position: fixed;
     top: 0;
     left: 0;

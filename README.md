@@ -40,7 +40,11 @@
 
 拥有数据库的完全控制权，包括查看所有用户资料，创建新用户，用户授权等操作。
 
-## 数据库物理设计
+## 数据库概念设计
+
+![image-20210605085143470](README.assets/image-20210605085143470.png)
+
+## 数据库结构
 
 ### 数据库各表简介
 
@@ -92,11 +96,11 @@
 
 在`bangumi_list`表中的番剧，可在`bangumi_cast`声优表中有多位声优对应。
 
-## 系统功能设计
+## 系统实现
 
 ### 系统后端
 
-#### 数据库数据获取
+#### 数据库数据维护
 
 通过python爬虫从目标网站中获取数据，插入到数据库中。
 
@@ -115,4 +119,205 @@
 从萌娘百科中获取番剧的详细信息。
 
 对于每一条信息，若该番剧存在于总表中，则在监督表、制作公司表、声优表中插入相关数据，并建立关系（此处调用存储过程完成）。
+
+#### 数据库数据CURD接口
+
+##### 数据展示API
+
+`get_last_week`文件，提供了获取一周内的番剧更新信息和番剧详细信息的接口。
+
+###### 一周内番剧信息
+
+关键代码
+
+```python
+# 获取一周内的番剧更新信息
+def get_last_week():  
+    # get bilibili below
+    bangumi_list = get_target_week('bilibili')
+    result={"result":bangumi_list}
+    print('bilibili result')
+    print(result)
+    # get acfun below
+    bangumi_list = get_target_week('acfun')
+    # insert acfun into bilibili
+    merge_list(result['result'], bangumi_list, 'acfun')
+    print('acfun result')
+    print(bangumi_list)
+
+    # insert AGE into bilibili
+    bangumi_list = get_target_week('AGE')
+    merge_list(result['result'], bangumi_list, 'AGE')
+    print('AGE result')
+    print(bangumi_list)
+
+    print('final result')
+    print(result)
+    return result
+
+def get_target_week(netName):
+    today = datetime.date.today()
+    bangumi_list = list()
+    for i in range(0,7):
+        last_day = today + datetime.timedelta(days= -i)
+        weekday = last_day.weekday()
+        date = last_day.strftime("%Y-%m-%d")
+        list_of_day = get_list_of_date(last_day, netName)
+        # solve mysql return void tuble when it is null
+        if type(list_of_day) == type(()):
+            list_of_day = []
+        # update the play_url, make it become a dict
+        for i in list_of_day:
+            i['play_url'] = {netName: i['play_url']}
+        temp = {"date":date,"weekday":weekday,"seasons":list_of_day}
+        bangumi_list.append(temp)
+    return sorted(bangumi_list, key=lambda keys: keys["weekday"])
+```
+
+数据示例
+
+![image-20210605092307676](README.assets/image-20210605092307676.png)
+
+典型界面
+
+![image-20210605092440808](README.assets/image-20210605092440808.png)
+
+###### 番剧详细信息
+
+关键代码
+
+```python
+def get_detail_info(id='4100450'):
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    print('get bangumi detail info: ')
+    cursor = db.cursor()
+    sql = """
+        select * from detail_info
+        where bangumi_id = %s
+        """%id
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    print(data)
+    sql = """
+        select actor from bangumi_cast
+        where bangumi_id = %s
+        """%id
+    cursor.execute(sql)
+    cast = cursor.fetchall()
+    cast = signColumnsShuffle(cast)
+    print(cast)
+    res = {'result': None}
+    if data and cast:
+        data = data[0]
+        res['result'] = {
+            'id':  data[0],
+            'name': data[1],
+            'company_name': data[2],
+            'conduct_name': data[3],
+            'img': data[4],
+            'cast': cast
+        }
+    return res
+```
+
+数据示例
+
+![image-20210605092555983](README.assets/image-20210605092555983.png)
+
+典型界面
+
+![image-20210605092617592](README.assets/image-20210605092617592.png)
+
+##### 数据管理API
+
+`databaseCURD`文件，提供了数据库增删查改接口，支持对特定表特定条目进行操作。
+
+关键代码
+
+```python
+# this function call updataItem, insertItem, deleteItem
+# according to the oldInfo and newInfo
+# if oldInfo is None, call insert
+# if newInfo is None, call delete
+# else, call updata
+#
+# OK code: return 1
+# error code:
+# 0  : sql run time error
+# -1 : invalid target table
+# -2 : user is None
+# -3 : user has not target privilege
+def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
+    if user == None:
+        return -2
+    userPrivilege = privilegeOfUser(user).get('privilege')
+
+    global db
+    db = pymysql.connect(host="localhost", port=3306, db="yukiyu", user="jhchen", password="123456",charset='utf8')
+    if oldInfo == None and newInfo == None or not checkValibleTableName(targetTable, user):
+        print('error ! invalid change!')
+        print('oldInfo:', oldInfo)
+        print('newInfo:', newInfo)
+        print('targetTable:', targetTable)
+        return -1
+    returnStatus = 0
+    if targetTable == 'user_list':
+        if ifManage(user) == 'Y':
+            return commmitChangeToUserlist(oldInfo, newInfo)
+        else:
+            return -3
+
+    if oldInfo == None:
+        if userPrivilege[1] == 'Y':
+            returnStatus = insertItem(newInfo, targetTable)
+        else:
+            returnStatus = -3
+    elif newInfo == None:
+        if userPrivilege[3] == 'Y':
+            returnStatus = deleteItem(oldInfo, targetTable)
+        else:
+            returnStatus = -3
+    else:
+        if userPrivilege[1] == 'Y':
+            returnStatus = updateItem(oldInfo, newInfo, targetTable)
+        else:
+            returnStatus = -3
+    return returnStatus
+```
+
+### Web服务
+
+`__init__.py`文件，运行`flask`web微服务，为前端数据展示提供支持。
+
+### 系统前端
+
+采用`H5+Vue`搭建。
+
+#### index页面
+
+欢迎页面，提供登陆、注册入口。
+
+![image-20210605093856905](README.assets/image-20210605093856905.png)
+
+#### main页面
+
+番剧更新时间表展示页面，提供番剧更新时间展示以及番剧详细信息展示。
+
+![image-20210605093915848](README.assets/image-20210605093915848.png)
+
+#### login页面
+
+提供注册和登陆功能。
+
+![image-20210605093934923](README.assets/image-20210605093934923.png)
+
+#### database页面
+
+提供数据库后台管理功能。
+
+![image-20210605094010996](README.assets/image-20210605094010996.png)
+
+![image-20210605094251223](README.assets/image-20210605094251223.png)
+
+### 程序模式图
 
