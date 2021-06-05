@@ -31,6 +31,13 @@ def create_view_detail_info(db):
     cursor.close()
 
 
+
+# 触发器
+# 作者：陈家豪
+# 触发器作用为：delete_on_bili: 在bilibili分表上删除某条bangumi信息后，检查其他分表上有无该bangumi信息
+#                若其他分表上也没有，则在总表bangumi_list上删除这条bangumi信息。
+#                delete_on_acfun的作用同上。
+# 由于pymysql语法兼容问题，不能通过python执行下列函数创建该触发器，需要通过dbinit.sql脚本创建
 def create_trigger_bangumi(db):
     cursor = db.cursor()
     #delete_on_bili
@@ -107,7 +114,14 @@ def create_trigger_bangumi(db):
         print('create error!')
         traceback.print_exc()
 
-    
+
+
+# 函数
+# 作者：陈家豪
+# 函数作用：ifexist_bili函数作用为，输入bangumi的id，检测其是否在bilibili分表中
+#           若存在，则返回id；若不存在，则返回-1.
+#           函数ifexist_acfun的作用同上
+# 由于pymysql语法兼容问题，不可通过以下python函数创建mysql函数，在dbinit.sql脚本中创建
 
 def create_func_ifexist(db):
     cursor = db.cursor()
