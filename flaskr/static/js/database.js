@@ -106,6 +106,10 @@ function initVue(_initData) {
                 axios.post("http://106.15.77.207/yukiyu/database", config)
                     .then((response) => {
                         console.log(response);
+                        var returnStatu = response.data
+                        if (returnStatu.statu != 1) {
+                            alert(returnStatu.info)
+                        }
                     })
                     .catch((response) => {
                         console.log(response);

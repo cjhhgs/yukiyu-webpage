@@ -107,7 +107,7 @@ def create_app(test_config=None):
             print('get data:')
             print(res)
             returnStatus = commitChangeToDatabase(res['oldInfo'], res['newInfo'], res['tableName'], getattr(current_user, 'username', None))
-            return 'return status: ' + str(returnStatus)
+            return returnStatus
 
 
 

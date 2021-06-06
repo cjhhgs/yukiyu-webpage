@@ -15,6 +15,26 @@ def checkValibleTableName(targetTable, user):
         return user in getSuperUser()
     return targetTable != None
 
+def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
+    returnStatu = changeProcess(oldInfo, newInfo, targetTable, user)
+    if returnStatu == 0:
+        info = '错误的数据格式！'
+    elif returnStatu == -1:
+        info = '该表不存在！'
+    elif returnStatu == -2:
+        info = '非法访问：未经过用户认证'
+    elif returnStatu == -3:
+        info = '非法访问：用户无该权限'
+    elif returnStatu == -4:
+        info = '错误的数据格式：管理员用户拥有增删查改所有权限'
+    elif returnStatu == -5:
+        info = '用户名重复'
+    elif returnStatu == 1:
+        info = '运行成功！'
+    else:
+        info = '未知错误！'
+    return {'statu': returnStatu, 'info': info}
+
 # this function call updataItem, insertItem, deleteItem
 # according to the oldInfo and newInfo
 # if oldInfo is None, call insert
@@ -29,7 +49,7 @@ def checkValibleTableName(targetTable, user):
 # -3 : user has not target privilege
 # -4 : manager's privilege is not 'YYYY' 
 # -5 : user name chongfu
-def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
+def changeProcess(oldInfo, newInfo, targetTable, user = None):
     if user == None:
         return -2
     userPrivilege = privilegeOfUser(user).get('privilege')
