@@ -2,7 +2,8 @@
 # 该模块基于flask框架，搭建了数据库展示前端的WEB服务
 
 import os
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, send_from_directory
+from flask.globals import current_app
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 import get_last_week
 from get_last_week import get_last_week, get_detail_info
@@ -121,6 +122,10 @@ def create_app(test_config=None):
             bangumi = get_last_week()
         return bangumi
 
+    @app.route('/favicon.ico')
+    def favicon():
+        print('favicon fun called!')
+        return current_app.send_static_file('images/favicon.ico')
 
 
     return app
