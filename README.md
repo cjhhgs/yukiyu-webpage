@@ -6,6 +6,16 @@
 
 陈家豪	19307130210
 
+### 小组分工
+
+#### 杨智麟
+
+负责前端页面开发以及后端爬虫、数据插入，数据库结构设计、部分数据表、视图的设计以及数据库CURD接口开发
+
+### 陈家豪
+
+负责flask微服务，数据库结构设计，部分数据表的创建，数据库函数、视图、触发器的创建以及用户管理模块开发
+
 ## 项目背景
 
 该项目立足于目前各大平台网站的番剧信息较为分散，用户需要辗转多个平台才能获取较为完整的番剧信息的背景下，实现了各大平台网站番剧信息的整合。将各大平台网站的番剧更新信息及番剧详情信息整合制表，展现在我们的网页上。
@@ -95,6 +105,287 @@
 在`bangumi_list`表中的番剧，可在`company`制作公司中有制作公司对应。
 
 在`bangumi_list`表中的番剧，可在`bangumi_cast`声优表中有多位声优对应。
+
+## 数据库实现
+
+### 建表
+
+```mysql
+-- 创建banguni_list总表
+create table if not exists bangumi_list(
+    bangumi_id int not null,
+    name varchar(80) not null,
+    img varchar(100) not null,
+    primary key (bangumi_id))ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建各视频网站分表
+-- 创建bilibili分表
+CREATE TABLE if not exists bilibili(
+    bangumi_id int not NULL,
+    title varchar(50) not NULL,
+    play_url varchar(50) not NULL,
+    episode varchar(50) not NULL,
+    last_update date not NULL,
+    PRIMARY KEY (bangumi_id),
+    foreign key (bangumi_id) references bangumi_list(bangumi_id)
+    on update cascade
+    on delete cascade)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建acfun分表
+CREATE TABLE if not exists acfun(
+    bangumi_id int not NULL,
+    title varchar(50) not NULL,
+    play_url varchar(50) not NULL,
+    episode varchar(50) not NULL,
+    last_update date not NULL,
+    PRIMARY KEY (bangumi_id),
+    foreign key (bangumi_id) references bangumi_list(bangumi_id)
+    on update cascade
+    on delete cascade)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建与制作相关的各个表
+-- 创建conduct表
+create table if not exists conduct(
+    -- id自增
+    conduct_id int primary key auto_increment,
+    conduct_name varchar(50) not null,
+    masterpiece varchar(50)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建company表
+create table if not exists company(
+    -- id自增
+    company_id int primary key auto_increment,
+    company_name varchar(50) not null,
+    masterpiece varchar(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建bangumi_conduct表
+create table if not exists bangumi_conduct(
+    bangumi_id int not null,
+    conduct_id int not null,
+    primary key (bangumi_id),
+    foreign key (bangumi_id) references bangumi_list(bangumi_id)
+    on update cascade
+    on delete cascade,
+    foreign key (conduct_id) references conduct(conduct_id)
+    on update cascade
+    on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- 创建bangumi_company表
+create table if not exists bangumi_company(
+    bangumi_id int not null,
+    company_id int not null,
+    primary key (bangumi_id),
+    foreign key (bangumi_id) references bangumi_list(bangumi_id)
+    on update cascade
+    on delete cascade,
+    foreign key (company_id) references company(company_id)
+    on update cascade
+    on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建cast表
+CREATE TABLE if not exists bangumi_cast(
+    bangumi_id int not null,
+    actor varchar(50) not null,
+    primary key (bangumi_id, actor),
+    foreign key (bangumi_id) references bangumi_list(bangumi_id)
+    on update cascade
+    on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建用户表，user_list
+create table if not exists user_list(
+    if_manager enum('Y','N') not null default 'N',
+    user_id int auto_increment,
+    name varchar(20) ,
+    password varchar(128) not null,
+    privilege char(4) not null default 'YNNN',
+    primary key(user_id),
+    unique key(name)    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 创建视图，detail_info
+CREATE view detail_info as (
+    select bangumi_id, name,company_name,conduct_name,img
+    from (((bangumi_list natural join bangumi_company) natural join bangumi_conduct)
+	natural join company) natural join conduct
+    );
+
+```
+
+### 视图
+
+```mysql
+# 作者：杨智麟
+# 该视图为用户的番剧的详情信息查询提供便利
+# 提供番剧的id,名称，制作公司，头图的信息
+-- 创建视图，detail_info
+CREATE view detail_info as (
+    select bangumi_id, name,company_name,conduct_name,img
+    from (((bangumi_list natural join bangumi_company) natural join bangumi_conduct)
+	natural join company) natural join conduct
+    );
+```
+
+### 函数
+
+```mysql
+# 函数
+# 作者：陈家豪
+# 函数作用：ifexist_bili函数作用为，输入bangumi的id，检测其是否在bilibili分表中
+#           若存在，则返回id；若不存在，则返回-1.
+#           函数ifexist_acfun的作用同上
+
+-- 创建函数，判断id是否存在于某分表中，若不存在则返回-1
+delimiter $$
+drop function if exists ifexist_bili$$
+create function ifexist_bili (id int) 
+returns int
+begin
+    if (id in (select bangumi_id from bilibili)) then
+        return(id);
+    end if;
+    return(-1);
+end$$
+delimiter ;
+
+delimiter $$
+drop function if exists ifexist_acfun$$
+create function ifexist_acfun (id int) 
+returns int
+begin
+    if (id in (select bangumi_id from acfun)) then
+        return(id);
+    end if;
+    return(-1);
+end$$
+delimiter ;
+```
+
+### 触发器
+
+```mysql
+# 触发器
+# 作者：陈家豪
+# 触发器作用为：delete_on_bili: 在bilibili分表上删除某条bangumi信息后，检查其他分表上有无该bangumi信息
+#                若其他分表上也没有，则在总表bangumi_list上删除这条bangumi信息。
+#                delete_on_acfun的作用同上。
+
+-- 创建触发器
+-- 在分表上删除某条目时，检测其在其他分表是否还存在，
+-- 若存在则仅删除此条目，不做其他操作
+-- 若不存在，则在总表bangumi_list中删除改条目
+delimiter //
+drop trigger if exists delete_on_bili//
+create trigger delete_on_bili
+after delete on bilibili
+for each row
+begin
+    if (ifexist_acfun(old.bangumi_id)=-1) then
+        begin
+            delete from bangumi_list
+            where bangumi_list.bangumi_id = old.bangumi_id;
+        end;
+    end if;
+end; //
+delimiter ;
+
+delimiter //
+drop trigger if exists delete_on_acfun//
+create trigger delete_on_acfun
+after delete on acfun
+for each row
+begin
+    if (ifexist_bili(old.bangumi_id)=-1) then
+        begin
+            delete from bangumi_list
+            where bangumi_list.bangumi_id = old.bangumi_id;
+        end;
+    end if;
+end; //
+delimiter ;
+```
+
+### 存储过程
+
+```mysql
+# 存储过程
+# 作者： 陈家豪
+# 存储过程作用：
+# insertIntoCompany: 输入动漫id, 名称, 公司名称， 可以将相应信息存储到company、bangumi_company表中
+#                    过程： 先判断公司名是否是表中没有的公司，若是则将公司信息插入到company表
+#                           再判断bangumi_id是否未录入bangumi_company表中，若未录入，则插入这条信息
+# insertIntoConduct: 功能和insertIntoCompany相似
+
+-- 创建存储过程
+-- 存储过程insertIntoCompany, 对于一个包含动漫及其制作公司的新条目，首先检验公司是否已存在company表中
+-- 若是新的公司，则将公司信息插入company表。
+-- 然后将（bangumi_id, company_id）插入到bangumi_company表中
+delimiter $$
+drop procedure if exists insertIntoCompany $$
+create procedure insertIntoCompany(
+    in id int,
+    in bangumi_name varchar(50),
+    in new_company_name varchar(50))
+begin
+    declare companyId int default 0;
+    if new_company_name not in (select company_name from company) then
+        begin
+        insert into company(company_name,masterpiece)
+        values 
+        (new_company_name,bangumi_name);
+        end;
+    end if;
+    if id not in (select bangumi_id from bangumi_company) then
+        begin
+        select company_id into companyId
+        from company
+        where company.company_name = new_company_name;
+        insert into bangumi_company(bangumi_id, company_id)
+        values
+        (id, companyId);
+        end;
+    end if;
+
+end$$
+delimiter ;
+
+
+-- 存储过程insertIntoConduct, 对于一个包含动漫及其制作公司的新条目，首先检验公司是否已存在conduct表中
+-- 若是新的公司，则将公司信息插入conduct表。
+-- 然后将（bangumi_id, conduct_id）插入到bangumi_company表中
+delimiter $$
+drop procedure if exists insertIntoConduct$$
+create procedure insertIntoConduct(in id int,in bangumi_name varchar(50),in new_conduct_name varchar(50))
+begin
+    declare conductId int default 0;
+    if (new_conduct_name not in (select conduct_name from conduct)) then
+        begin
+        
+        insert into conduct(conduct_name,masterpiece)
+        values 
+        (new_conduct_name,bangumi_name);
+        end;
+    end if;
+    if (id not in (select bangumi_id from bangumi_conduct)) then
+        begin
+        select conduct_id into conductId
+        from conduct
+        where conduct.conduct_name = new_conduct_name;
+        insert into bangumi_conduct(bangumi_id, conduct_id)
+        values
+        (id, conductId);
+        end;
+    end if;
+end$$
+delimiter ;
+```
+
+
 
 ## 系统实现
 
@@ -320,4 +611,6 @@ def commitChangeToDatabase(oldInfo, newInfo, targetTable, user = None):
 ![image-20210605094251223](README.assets/image-20210605094251223.png)
 
 ### 程序模式图
+
+![program feture graph](README.assets/program feture graph.png)
 
