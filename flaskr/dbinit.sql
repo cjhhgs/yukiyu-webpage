@@ -1,4 +1,4 @@
--- 请登入mysql后输入 \. dbinit.sql的完整路径
+-- 请登入mysql后输入 source D:/yukiyu/flaskr/dbinit.sql的完整路径
 drop database if exists yukiyu;
 
 create database if not exists yukiyu
