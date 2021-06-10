@@ -1,4 +1,4 @@
--- 请登入mysql后输入 \. dbinit.sql的完整路径
+-- 请登入mysql后输入 source D:/yukiyu/flaskr/dbinit.sql的完整路径
 drop database if exists yukiyu;
 
 create database if not exists yukiyu
@@ -236,3 +236,7 @@ begin
     end if;
 end$$
 delimiter ;
+
+-- root
+insert into user_list(if_manager,name,password,privilege)
+values('Y','root','pbkdf2:sha256:260000$JsFZVWr6NczKuYpn$a97193b04f5fee5307f226bb66394b1e8bec80341f2f127b6e2df78891de56a4','YYYY');
