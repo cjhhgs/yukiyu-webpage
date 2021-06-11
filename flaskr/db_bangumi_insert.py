@@ -61,7 +61,7 @@ def if_exist(db,newName):
 
 # use time to create the id
 def create_id():
-    ticks = int(time.time()*100)%10000000
+    ticks = int(time.time()*100)%10000000 
     return ticks
 
 def insert_new(db, bangumi_dict):
@@ -92,10 +92,10 @@ def insert_new(db, bangumi_dict):
                     try:
                         print('start excute')
                         cursor.execute(sql)
-                        print('excute succeed')
+                        print('excute success')
                         print('start commit')
                         db.commit()
-                        print('succeed')
+                        print('success')
                     except:
                         db.rollback()
                         print('update error!')
@@ -125,7 +125,7 @@ def insert_new(db, bangumi_dict):
                         try:
                             cursor.execute(sql)
                             db.commit()
-                            print('succeed')
+                            print('success')
                         except:
                             print('insert into bangumi_list error!')
                             db.rollback()
@@ -140,7 +140,7 @@ def insert_new(db, bangumi_dict):
                         print('insert item: ' ,sql)
                         cursor.execute(sql)
                         db.commit()
-                        print('succeed')
+                        print('success')
                     except:
                         db.rollback()
                         print('insert into %s error!' %key)
