@@ -84,7 +84,7 @@ def insertInfo(bangumiInfoList, db):
                 insertConduct(item, bangumiInfoList[index]['conduct'], db)
             if bangumiInfoList[index]['production'] != '':
                 insertCompany(item, bangumiInfoList[index]['production'], db)
-            insertCast(item, bangumiInfoList[index]['cast'], db)
+            # insertCast(item, bangumiInfoList[index]['cast'], db)
 
 
 def insert_bangumi_info(db):
